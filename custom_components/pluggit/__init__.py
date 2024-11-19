@@ -1,0 +1,1 @@
+"""The Pluggit integration."""
