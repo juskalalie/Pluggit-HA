@@ -2,7 +2,7 @@ import logging
 from typing import Any
 
 import voluptuous as vol
-from homeassistant import config_entries
+from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 
 from .const import CONFIG_HOST, DOMAIN
 from .pypluggit.pluggit import Pluggit
@@ -15,28 +15,49 @@ STEP_USER_DATA_SCHEMA = vol.Schema(
 
 
 async def validate_input(data: dict[str, Any]) -> str:
-    """Check for Host and try to get serial number"""
+    """Check for Host and try to get serial number."""
 
     host = data[CONFIG_HOST]
     pluggit = Pluggit(host)
+    # _LOGGER.info(pluggit.read_exception().isError)
 
     serial_number = pluggit.get_serial_number()
+    # _LOGGER.info(pluggit.read_exception().isError())
 
     return serial_number
 
 
-class PluggitConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+class PluggitConfigFlow(ConfigFlow, domain=DOMAIN):
     """Config flow for Pluggit."""
 
     VERSION = 1
 
-    async def async_step_user(self, user_input: dict[str, Any] | None = None):
+    async def async_step_user(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
         _LOGGER.info(user_input)
 
+        errors = {}
+
         if user_input is not None:
-            _LOGGER.info(user_input)
             ret = await validate_input(user_input)
             _LOGGER.info(ret)
-            return self.async_create_entry(title="Pluggit", data=user_input)
+            errors[CONFIG_HOST] = "No valid host or connection!"
+            if ret is not None:
+                return self.async_create_entry(title="Pluggit", data=user_input)
 
-        return self.async_show_form(step_id="user", data_schema=STEP_USER_DATA_SCHEMA)
+        return self.async_show_form(
+            step_id="user", data_schema=STEP_USER_DATA_SCHEMA, errors=errors
+        )
+
+    # async def async_step_reconfigure(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
+    #     if user_input is not None:
+    #         _LOGGER.info(user_input)
+    #         # self.async_set_unique_id(user_id)
+    #         # self._abort_if_unique_id_mismatch()
+    #         return self.async_update_reload_and_abort(
+    #             self._get_reconfigure_entry(),
+    #             # data_updates=data,
+    #         )
+
+    #     return self.async_show_form(step_id="reconfigure", data_schema=STEP_USER_DATA_SCHEMA)
