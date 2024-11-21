@@ -4,7 +4,7 @@ from typing import Any
 import voluptuous as vol
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 
-from .const import CONFIG_HOST, DOMAIN
+from .const import CONFIG_HOST, DOMAIN, SERIAL_NUMBER
 from .pypluggit.pluggit import Pluggit
 
 _LOGGER = logging.getLogger(__name__)
@@ -19,10 +19,8 @@ async def validate_input(data: dict[str, Any]) -> str:
 
     host = data[CONFIG_HOST]
     pluggit = Pluggit(host)
-    # _LOGGER.info(pluggit.read_exception().isError)
 
     serial_number = pluggit.get_serial_number()
-    # _LOGGER.info(pluggit.read_exception().isError())
 
     return serial_number
 
@@ -35,15 +33,16 @@ class PluggitConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        _LOGGER.info(user_input)
+        _LOGGER.debug(user_input)
 
         errors = {}
 
         if user_input is not None:
             ret = await validate_input(user_input)
-            _LOGGER.info(ret)
+            _LOGGER.debug(ret)
             errors[CONFIG_HOST] = "No valid host or connection!"
             if ret is not None:
+                user_input[SERIAL_NUMBER] = ret
                 return self.async_create_entry(title="Pluggit", data=user_input)
 
         return self.async_show_form(
