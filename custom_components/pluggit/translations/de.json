@@ -1,0 +1,44 @@
+{
+    "config": {
+      "step": {
+        "user": {
+          "data": {
+            "host": "Host"
+          }
+        }
+      }
+    },
+    "entity": {
+      "sensor": {
+        "t1_outdoor": {
+          "name": "T1 Frischluft"
+        },
+        "t2_supply": {
+          "name": "T2 Zuluft"
+        },
+        "t3_extract": {
+          "name": "T3 Abluft"
+        },
+        "t4_exhaust": {
+          "name": "T4 Fortluft"
+        },
+        "work_time": {
+          "name": "Laufzeit"
+        },
+        "filter_remain": {
+          "name": "Filterwechsel"
+        },
+        "filter_dirtiness": {
+          "name": "Filterverschmutzung"
+        },
+        "bypass_state": {
+          "name": "Bypass Zustand"
+        }
+      },
+      "fan":{
+        "ventilation":{
+          "name": "Raumlüftung"
+        }
+      }
+    }
+  }

@@ -1,11 +1,44 @@
 {
-    "config": {
-      "step": {
-        "user": {
-          "data": {
-            "host": "Host"
-          }
+  "config": {
+    "step": {
+      "user": {
+        "data": {
+          "host": "Host"
         }
       }
     }
+  },
+  "entity": {
+    "sensor": {
+      "t1_outdoor": {
+        "name": "T1 Outdoor"
+      },
+      "t2_supply": {
+        "name": "T2 Supply"
+      },
+      "t3_extract": {
+        "name": "T3 Extract"
+      },
+      "t4_exhaust": {
+        "name": "T4 Exhaust"
+      },
+      "work_time": {
+        "name": "Work time"
+      },
+      "filter_remain": {
+        "name": "Filter remain"
+      },
+      "filter_dirtiness": {
+        "name": "Filter dirtiness"
+      },
+      "bypass_state": {
+        "name": "Bypass state"
+      }
+    },
+    "fan":{
+      "ventilation":{
+        "name": "Ventilation"
+      }
+    }
   }
+}
