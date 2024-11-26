@@ -10,7 +10,8 @@ from .pypluggit.pluggit import Pluggit
 _LOGGER = logging.getLogger(__name__)
 
 STEP_USER_DATA_SCHEMA = vol.Schema(
-    {vol.Required(CONFIG_HOST, description={"suggested_value": "192.168.0.1"}): str}
+    {vol.Required(CONFIG_HOST, description={
+                  "suggested_value": "192.168.0.1"}): str}
 )
 
 
@@ -56,7 +57,7 @@ class PluggitConfigFlow(ConfigFlow, domain=DOMAIN):
     #         # self._abort_if_unique_id_mismatch()
     #         return self.async_update_reload_and_abort(
     #             self._get_reconfigure_entry(),
-    #             # data_updates=data,
+    #             data_updates=user_input,
     #         )
 
     #     return self.async_show_form(step_id="reconfigure", data_schema=STEP_USER_DATA_SCHEMA)

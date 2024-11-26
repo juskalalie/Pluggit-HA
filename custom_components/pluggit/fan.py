@@ -1,5 +1,7 @@
 """Fan"""
 
+import logging
+import time
 from typing import Any
 
 from homeassistant.components.fan import FanEntity, FanEntityFeature
@@ -12,9 +14,11 @@ from homeassistant.util.percentage import (
     percentage_to_ordered_list_item,
 )
 
-from .const import DOMAIN
-from .pypluggit.const import ActiveUnitMode, SpeedLevelFan
+from .const import DOMAIN, SERIAL_NUMBER
+from .pypluggit.const import CURRENT_UNIT_MODE, ActiveUnitMode, SpeedLevelFan
 from .pypluggit.pluggit import Pluggit
+
+_LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
@@ -22,60 +26,69 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ):
-    pluggit: Pluggit = hass.data[DOMAIN][entry.entry_id]
+    data = hass.data[DOMAIN][entry.entry_id]
+    pluggit: Pluggit = data[DOMAIN]
+    serial_num = data[SERIAL_NUMBER]
+
     device = DeviceInfo(
-        identifiers={(DOMAIN, pluggit.get_serial_number())},
+        identifiers={(DOMAIN, str(serial_num))},
         name="Pluggit",
         manufacturer="Pluggit",
         model=pluggit.get_unit_type(),
         sw_version=pluggit.get_firmware_version(),
+        serial_number=serial_num,
     )
 
-    async_add_entities(PluggitFan(pluggit=pluggit, device=device))
+    async_add_entities(
+        [PluggitFan(pluggit=pluggit, device=device)], update_before_add=True
+    )
 
 
 class PluggitFan(FanEntity):
-    ORDERED_NAMED_FAN_SPEEDS = ["Level 1", "Level 2", "Level 3", "Level 4"]
-    _attr_supported_features = (
-        FanEntityFeature.PRESET_MODE
-        | FanEntityFeature.SET_SPEED
-        | FanEntityFeature.TURN_OFF
-        | FanEntityFeature.TURN_ON
-    )
+    ORDERED_NAMED_FAN_SPEEDS = [
+        SpeedLevelFan.LEVEL_1,
+        SpeedLevelFan.LEVEL_2,
+        SpeedLevelFan.LEVEL_3,
+        SpeedLevelFan.LEVEL_4,
+    ]
+    SUPPORTED_PRESET_MODES = [CURRENT_UNIT_MODE[3], CURRENT_UNIT_MODE[5]]
+    _attr_supported_features = FanEntityFeature.PRESET_MODE | FanEntityFeature.SET_SPEED
+    _attr_has_entity_name = True
+    # _attr_name = "Ventilation"
 
     def __init__(self, pluggit: Pluggit, device: DeviceInfo) -> None:
-        """Initialise sensor."""
+        """Initialise Ventilation."""
         self._pluggit = pluggit
         self._device = device
-        self._speedLevel = 0
-        self._currentMode = "Standby"
+        self._speedLevel = SpeedLevelFan.LEVEL_1
+        self._currentMode = CURRENT_UNIT_MODE[0]
+        self._attr_unique_id = "fan"
+        self._is_available = False
 
     @property
     def device_info(self) -> DeviceInfo:
         """Return the device info."""
-        return self.device
+        return self._device
+
+    @property
+    def translation_key(self):
+        """Return translation key."""
+        return "ventilation"
 
     @property
     def is_on(self) -> bool | None:
         """Return true if fan is on."""
-        return self._speedLevel > 0
+        return self._speedLevel.value > 0
 
     @property
     def percentage(self) -> int | None:
-        # TODO mit enum arbeiten von pluggit
-        item: str
-        if self._speedLevel == 1:
-            item = "Level 1"
-        elif self._speedLevel == 2:
-            item = "Level 2"
-        elif self._speedLevel == 3:
-            item = "Level 3"
-        elif self._speedLevel == 4:
-            item = "Level 4"
-        else:
+        """Return the speed of the fan in percentage."""
+        if self._speedLevel is SpeedLevelFan.LEVEL_0:
             return 0
 
-        return ordered_list_item_to_percentage(self.ORDERED_NAMED_FAN_SPEEDS, item)
+        return ordered_list_item_to_percentage(
+            self.ORDERED_NAMED_FAN_SPEEDS, self._speedLevel
+        )
 
     @property
     def speed_count(self) -> int:
@@ -84,39 +97,49 @@ class PluggitFan(FanEntity):
 
     @property
     def preset_mode(self) -> str | None:
-        # TODO strings raus
-        if self._currentMode == "Week Program":
+        """Return actual preset mode"""
+        if self._currentMode in self.SUPPORTED_PRESET_MODES:
             return self._currentMode
         else:
             return None
 
     @property
     def preset_modes(self) -> list[str] | None:
-        # TODO strings raus
-        return ["Week Program"]
+        """Return a list of preset modes."""
+        return self.SUPPORTED_PRESET_MODES
 
     def set_preset_mode(self, preset_mode: str) -> None:
-        # TODO gucken was hier ausgesucht wird
-        self._pluggit.set_unit_mode(ActiveUnitMode.WEEK_PROGRAM_MODE)
+        """Set preset mode"""
+        _LOGGER.info("set prest mode")
+        mode = None
+        if preset_mode == CURRENT_UNIT_MODE[3]:
+            mode = ActiveUnitMode.WEEK_PROGRAM_MODE
+        elif preset_mode == CURRENT_UNIT_MODE[5]:
+            mode = ActiveUnitMode.AWAY_MODE
+        else:
+            return None
+
+        self._pluggit.set_unit_mode(mode=mode)
 
     def set_percentage(self, percentage: int) -> None:
-        # TODO mit ennum arbeiten von pluggit
-        # TODO anlage auf manuel  stellen
+        """Set fan speed in percentage"""
+
         named_speed = percentage_to_ordered_list_item(
             self.ORDERED_NAMED_FAN_SPEEDS, percentage
         )
-        speed: SpeedLevelFan
+        if percentage == 0:
+            named_speed = SpeedLevelFan.LEVEL_0
 
-        if named_speed == "Level 1":
-            speed = SpeedLevelFan.LEVEL_1
-        elif named_speed == "Level 2":
-            speed = SpeedLevelFan.LEVEL_2
-        elif named_speed == "Level 3":
-            speed = SpeedLevelFan.LEVEL_3
-        elif named_speed == "Level 4":
-            speed = SpeedLevelFan.LEVEL_4
+        if self._currentMode is not CURRENT_UNIT_MODE[1]:
+            self._pluggit.set_unit_mode(ActiveUnitMode.MANUAL_MODE)
 
-        self._pluggit.set_speed_level(speed=speed)
+        self._pluggit.set_speed_level(speed=named_speed)
+
+    @property
+    def available(self) -> bool:
+        """Return if entity is available."""
+        _LOGGER.info("BIST DU DA!!!")
+        return self._is_available
 
     def turn_on(
         self,
@@ -126,16 +149,35 @@ class PluggitFan(FanEntity):
         **kwargs: Any,
     ) -> None:
         """Turn on the fan."""
-        # TODO gucken auf was percentage gestellt ist und ob preset mode gesetzt ist, danach die anlage anschalten
-        # TODO gucken was für ein modus gesetzt ist und gegenbenenfalls in manuelstellen
+        if preset_mode is not None:
+            self.set_preset_mode(preset_mode=preset_mode)
+            return None
+
         self._pluggit.set_speed_level(SpeedLevelFan.LEVEL_1)
 
     def turn_off(self, **kwargs: Any) -> None:
-        # TODO Anlage auf manuael stellen
+        """Turn off the fan."""
+        if self._currentMode is not CURRENT_UNIT_MODE[1]:
+            self._pluggit.set_unit_mode(ActiveUnitMode.MANUAL_MODE)
+
         self._pluggit.set_speed_level(SpeedLevelFan.LEVEL_0)
 
     def update(self) -> None:
         """Fetch data for fan."""
-        # TODO checken ob hier None kommt und dann gucken was man dann tut
-        self._speedLevel = self._pluggit.get_speed_level()
+        # If a preset mode is set, there is an update. But this update is to fast,
+        # the mode on the device isn't ready. So we wait here 100ms.
+        time.sleep(100 / 1000)
+        try:
+            self._speedLevel = SpeedLevelFan(self._pluggit.get_speed_level())
+        except ValueError:
+            self._speedLevel = None
         self._currentMode = self._pluggit.get_current_unit_mode()
+
+        if self._speedLevel is None or self._currentMode is None:
+            self._is_available = False
+        else:
+            self._is_available = True
+
+        _LOGGER.info("UPDATE:")
+        _LOGGER.info(self._speedLevel)
+        _LOGGER.info(self._currentMode)
