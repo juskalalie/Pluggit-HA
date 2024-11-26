@@ -3,6 +3,7 @@ import time
 from pymodbus import ModbusException
 from pymodbus.client import ModbusTcpClient
 from pymodbus.constants import Endian
+from pymodbus.exceptions import ModbusIOException
 from pymodbus.payload import BinaryPayloadBuilder, BinaryPayloadDecoder
 
 from .const import (
@@ -35,6 +36,8 @@ class Pluggit:
                 result.registers, byteorder=Endian.BIG, wordorder=Endian.LITTLE
             )
         except ModbusException:
+            return None
+        except ModbusIOException:
             return None
 
         if item[1] == RegisterType.UINT_32:
