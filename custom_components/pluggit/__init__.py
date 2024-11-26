@@ -6,20 +6,23 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
-from .const import CONFIG_HOST, DOMAIN
+from .const import CONFIG_HOST, DOMAIN, SERIAL_NUMBER
 from .pypluggit.pluggit import Pluggit
 
-PLATFORMS = [Platform.FAN]
+PLATFORMS = [Platform.FAN, Platform.SENSOR]
 _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up pluggit from a config entry."""
-    _LOGGER.debug("Hhuhu setup entry")
 
     hass.data.setdefault(DOMAIN, {})
 
-    hass.data[DOMAIN][entry.entry_id] = Pluggit(entry.data[CONFIG_HOST])
+    _LOGGER.info(entry.data[SERIAL_NUMBER])
+    hass.data[DOMAIN][entry.entry_id] = {
+        DOMAIN: Pluggit(entry.data[CONFIG_HOST]), SERIAL_NUMBER: entry.data[SERIAL_NUMBER]}
+
+    _LOGGER.info(hass.data[DOMAIN][entry.entry_id])
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
     return True
