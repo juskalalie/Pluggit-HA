@@ -3,7 +3,7 @@ import time
 from pymodbus import ModbusException
 from pymodbus.client import ModbusTcpClient
 from pymodbus.constants import Endian
-from pymodbus.exceptions import ModbusIOException
+from pymodbus.exceptions import ConnectionException, ModbusIOException
 from pymodbus.payload import BinaryPayloadBuilder, BinaryPayloadDecoder
 
 from .const import (
@@ -54,7 +54,10 @@ class Pluggit:
         elif item[1] == RegisterType.FLOAT:
             builder.add_32bit_float(data)
 
-        self.client.write_registers(address=item[0], values=builder.to_registers())
+        try:
+            self.client.write_registers(address=item[0], values=builder.to_registers())
+        except ConnectionException:
+            return
 
     def get_unit_type(self) -> str | None:
         ret = self.__read_register(register=Registers.PRM_SYSTEM_ID)
@@ -98,6 +101,9 @@ class Pluggit:
     def get_temperature_t4(self) -> float | None:
         return self.__read_register(register=Registers.PRM_RAM_IDX_T4)
 
+    def get_filter_time(self) -> int | None:
+        return self.__read_register(register=Registers.PRM_FILTER_DEFAULT_TIME)
+
     def get_remaining_filter_time(self) -> int | None:
         return self.__read_register(register=Registers.PRM_FILTER_REMAINING_TIME)
 
@@ -129,6 +135,9 @@ class Pluggit:
         return self.__read_register(
             register=Registers.PRM_RAM_IDX_BYPASS_MANUAL_TIMEOUT
         )
+
+    def get_date_time(self) -> int | None:
+        return self.__read_register(register=Registers.PRM_DATE_TIME)
 
     def set_date_time(self):
         self.__write_register(

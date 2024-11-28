@@ -6,6 +6,7 @@ class Registers(Enum):
     PRM_SYSTEM_SERIAL_NUM_LOW = auto()
     PRM_SYSTEM_SERIAL_NUM_HIGH = auto()
     PRM_FW_VERSION = auto()
+    PRM_DATE_TIME = auto()
     PRM_DATE_TIME_SET = auto()
     PRM_WORK_TIME = auto()
     PRM_CURRENT_BL_STATE = auto()
@@ -113,6 +114,7 @@ REGISTER_DIC = {
     Registers.PRM_SYSTEM_SERIAL_NUM_LOW: [4, RegisterType.UINT_32],
     Registers.PRM_SYSTEM_SERIAL_NUM_HIGH: [6, RegisterType.UINT_32],
     Registers.PRM_FW_VERSION: [24, RegisterType.UINT_32],
+    Registers.PRM_DATE_TIME: [108, RegisterType.UINT_32],
     Registers.PRM_DATE_TIME_SET: [110, RegisterType.UINT_32],
     Registers.PRM_WORK_TIME: [624, RegisterType.UINT_32],
     Registers.PRM_CURRENT_BL_STATE: [472, RegisterType.UINT_32],
