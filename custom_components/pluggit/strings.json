@@ -33,11 +33,68 @@
       },
       "bypass_state": {
         "name": "Bypass state"
+      },
+      "bypass_tmin":{
+        "name": "Bypass Tmin"
+      },
+      "bypass_tmax":{
+        "name": "Bypass Tmax"
+      },
+      "bypass_tmin_summer":{
+        "name": "Bypass Tmin summer"
+      },
+      "bypass_tmax_summer":{
+        "name": "Bypass Tmax summer"
+      },
+      "bypass_manual_timeout":{
+        "name": "Manual bypass duration"
+      },
+      "get_time":{
+        "name": "Time"
+      },
+      "get_filter_time":{
+        "name": "Filter time"
+      },
+      "filter_time":{
+        "name": "Filter lifetime"
       }
     },
     "fan":{
       "ventilation":{
         "name": "Ventilation"
+      }
+    },
+    "number":{
+      "bypass_tmin":{
+        "name": "Bypass Tmin"
+      },
+      "bypass_tmax":{
+        "name": "Bypass Tmax"
+      },
+      "bypass_tmin_summer":{
+        "name": "Bypass Tmin summer"
+      },
+      "bypass_tmax_summer":{
+        "name": "Bypass Tmax summer"
+      },
+      "filter_time":{
+        "name": "Filter lifetime"
+      },
+      "bypass_manual_timeout":{
+        "name": "Manual bypass duration"
+      }
+    },
+    "button":{
+      "filter_reset":{
+        "name": "Filter reset"
+      },
+      "date_time":{
+        "name": "Set time"
+      }
+    },
+    "switch":{
+      "summer_mode":{
+        "name": "Summer mode"
       }
     }
   }
