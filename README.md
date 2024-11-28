@@ -1,3 +1,7 @@
+# Pluggit - Home Assistant Integration
+
+This integration allows you to control and monitor your Pluggit AP190, AP310 and AP460 using Home Assistant.
+
 ## Prerequisites
 
 - Installed [HACS](https://www.hacs.xyz/docs/use/)
