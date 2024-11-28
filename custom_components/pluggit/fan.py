@@ -110,7 +110,6 @@ class PluggitFan(FanEntity):
 
     def set_preset_mode(self, preset_mode: str) -> None:
         """Set preset mode"""
-        _LOGGER.info("set prest mode")
         mode = None
         if preset_mode == CURRENT_UNIT_MODE[3]:
             mode = ActiveUnitMode.WEEK_PROGRAM_MODE
@@ -138,7 +137,6 @@ class PluggitFan(FanEntity):
     @property
     def available(self) -> bool:
         """Return if entity is available."""
-        _LOGGER.info("BIST DU DA!!!")
         return self._is_available
 
     def turn_on(
@@ -177,7 +175,3 @@ class PluggitFan(FanEntity):
             self._is_available = False
         else:
             self._is_available = True
-
-        _LOGGER.info("UPDATE:")
-        _LOGGER.info(self._speedLevel)
-        _LOGGER.info(self._currentMode)

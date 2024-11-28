@@ -10,8 +10,7 @@ from .pypluggit.pluggit import Pluggit
 _LOGGER = logging.getLogger(__name__)
 
 STEP_USER_DATA_SCHEMA = vol.Schema(
-    {vol.Required(CONFIG_HOST, description={
-                  "suggested_value": "192.168.0.1"}): str}
+    {vol.Required(CONFIG_HOST, description={"suggested_value": "192.168.0.1"}): str}
 )
 
 
@@ -34,13 +33,10 @@ class PluggitConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        _LOGGER.debug(user_input)
-
         errors = {}
 
         if user_input is not None:
             ret = await validate_input(user_input)
-            _LOGGER.debug(ret)
             errors[CONFIG_HOST] = "No valid host or connection!"
             if ret is not None:
                 user_input[SERIAL_NUMBER] = ret

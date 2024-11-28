@@ -1,19 +1,20 @@
 """Number"""
+
 import logging
 from dataclasses import dataclass
 from typing import Callable
+
 from homeassistant.components.number import (
     NumberDeviceClass,
     NumberEntity,
     NumberEntityDescription,
     NumberMode,
 )
-from homeassistant.const import (UnitOfTemperature, EntityCategory, UnitOfTime)
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import EntityCategory, UnitOfTemperature, UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-
 
 from .const import DOMAIN, SERIAL_NUMBER
 from .pypluggit.pluggit import Pluggit
@@ -37,7 +38,7 @@ NUMBERS: tuple[PluggitNumberEntityDescription, ...] = (
         native_max_value=15,
         native_min_value=12,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-        set_fn=lambda device, temp: device.set_bypass_tmin(temp)
+        set_fn=lambda device, temp: device.set_bypass_tmin(temp),
     ),
     PluggitNumberEntityDescription(
         key="bypass_tmax",
@@ -47,7 +48,7 @@ NUMBERS: tuple[PluggitNumberEntityDescription, ...] = (
         native_max_value=27,
         native_min_value=21,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-        set_fn=lambda device, temp: device.set_bypass_tmax(temp)
+        set_fn=lambda device, temp: device.set_bypass_tmax(temp),
     ),
     PluggitNumberEntityDescription(
         key="bypass_tmin_summer",
@@ -57,7 +58,7 @@ NUMBERS: tuple[PluggitNumberEntityDescription, ...] = (
         native_max_value=17,
         native_min_value=12,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-        set_fn=lambda device, temp: device.set_bypass_tmin_summer(temp)
+        set_fn=lambda device, temp: device.set_bypass_tmin_summer(temp),
     ),
     PluggitNumberEntityDescription(
         key="bypass_tmax_summer",
@@ -67,7 +68,7 @@ NUMBERS: tuple[PluggitNumberEntityDescription, ...] = (
         native_max_value=30,
         native_min_value=21,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-        set_fn=lambda device, temp: device.set_bypass_tmax_summer(temp)
+        set_fn=lambda device, temp: device.set_bypass_tmax_summer(temp),
     ),
     PluggitNumberEntityDescription(
         key="filter_time",
@@ -77,7 +78,7 @@ NUMBERS: tuple[PluggitNumberEntityDescription, ...] = (
         native_max_value=360,
         native_min_value=0,
         native_unit_of_measurement=UnitOfTime.DAYS,
-        set_fn=lambda device, temp: device.set_default_filter_time(int(temp))
+        set_fn=lambda device, temp: device.set_default_filter_time(int(temp)),
     ),
     PluggitNumberEntityDescription(
         key="bypass_manual_timeout",
@@ -87,8 +88,8 @@ NUMBERS: tuple[PluggitNumberEntityDescription, ...] = (
         native_max_value=480,
         native_min_value=60,
         native_unit_of_measurement=UnitOfTime.MINUTES,
-        set_fn=lambda device, temp: device.set_bypass_manual_timeout(int(temp))
-    )
+        set_fn=lambda device, temp: device.set_bypass_manual_timeout(int(temp)),
+    ),
 )
 
 

@@ -1,16 +1,15 @@
 """Button"""
+
 import logging
 from dataclasses import dataclass
 from typing import Callable
-from homeassistant.components.button import (
-    ButtonEntity, ButtonEntityDescription
-)
-from homeassistant.const import EntityCategory
+
+from homeassistant.components.button import ButtonEntity, ButtonEntityDescription
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-
 
 from .const import DOMAIN, SERIAL_NUMBER
 from .pypluggit.pluggit import Pluggit
@@ -29,13 +28,13 @@ BUTTONS: tuple[PluggitButtonEntityDescription, ...] = (
     PluggitButtonEntityDescription(
         key="filter_reset",
         translation_key="filter_reset",
-        set_fn=lambda device: device.reset_filter()
+        set_fn=lambda device: device.reset_filter(),
     ),
     PluggitButtonEntityDescription(
         key="date_time",
         translation_key="date_time",
-        set_fn=lambda device: device.set_date_time()
-    )
+        set_fn=lambda device: device.set_date_time(),
+    ),
 )
 
 

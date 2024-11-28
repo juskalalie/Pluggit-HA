@@ -2,6 +2,7 @@
 
 import logging
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from typing import Callable
 
 from homeassistant.components.sensor import (
@@ -11,7 +12,7 @@ from homeassistant.components.sensor import (
     SensorStateClass,
 )
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import UnitOfTemperature, UnitOfTime
+from homeassistant.const import EntityCategory, UnitOfTemperature, UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -25,7 +26,7 @@ _LOGGER = logging.getLogger(__name__)
 
 @dataclass(kw_only=True)
 class PluggitSensorEntityDescription(SensorEntityDescription):
-    """Describes Example sensor entity."""
+    """Describes Pluggit sensor entity."""
 
     value_fn: Callable[[Pluggit], StateType]
 
@@ -70,6 +71,7 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
     PluggitSensorEntityDescription(
         key="work_time",
         translation_key="work_time",
+        entity_category=EntityCategory.DIAGNOSTIC,
         device_class=SensorDeviceClass.DURATION,
         native_unit_of_measurement=UnitOfTime.HOURS,
         suggested_display_precision=0,
@@ -103,6 +105,76 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         native_unit_of_measurement=None,
         state_class=None,
         value_fn=lambda device: device.get_bypass_actual_state(),
+    ),
+    PluggitSensorEntityDescription(
+        key="get_bypass_tmin",
+        translation_key="bypass_tmin",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=1,
+        value_fn=lambda device: device.get_bypass_tmin(),
+    ),
+    PluggitSensorEntityDescription(
+        key="get_bypass_tmax",
+        translation_key="bypass_tmax",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=1,
+        value_fn=lambda device: device.get_bypass_tmax(),
+    ),
+    PluggitSensorEntityDescription(
+        key="get_bypass_tmin_summer",
+        translation_key="bypass_tmin_summer",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=1,
+        value_fn=lambda device: device.get_bypass_tmin_summer(),
+    ),
+    PluggitSensorEntityDescription(
+        key="get_bypass_tmax_summer",
+        translation_key="bypass_tmax_summer",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        device_class=SensorDeviceClass.TEMPERATURE,
+        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=1,
+        value_fn=lambda device: device.get_bypass_tmax_summer(),
+    ),
+    PluggitSensorEntityDescription(
+        key="get_bypass_manual_timeout",
+        translation_key="bypass_manual_timeout",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        device_class=SensorDeviceClass.DURATION,
+        native_unit_of_measurement=UnitOfTime.MINUTES,
+        suggested_display_precision=0,
+        state_class=SensorStateClass.MEASUREMENT,
+        value_fn=lambda device: device.get_bypass_manual_timeout(),
+    ),
+    PluggitSensorEntityDescription(
+        key="get_time",
+        translation_key="get_time",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        device_class=SensorDeviceClass.TIMESTAMP,
+        state_class=None,
+        value_fn=lambda device: datetime.fromtimestamp(
+            device.get_date_time(), tz=timezone.utc
+        ),
+    ),
+    PluggitSensorEntityDescription(
+        key="get_filter_time",
+        translation_key="filter_time",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        device_class=SensorDeviceClass.DURATION,
+        native_unit_of_measurement=UnitOfTime.DAYS,
+        suggested_display_precision=0,
+        state_class=SensorStateClass.MEASUREMENT,
+        value_fn=lambda device: device.get_filter_time(),
     ),
 )
 
@@ -152,7 +224,6 @@ class PluggitSensor(SensorEntity):
     @property
     def available(self) -> bool:
         """Return if entity is available."""
-        _LOGGER.info("BIST DU DA " + self._attr_unique_id)
         return self._is_available
 
     def update(self) -> None:
@@ -164,6 +235,3 @@ class PluggitSensor(SensorEntity):
             self._is_available = False
         else:
             self._is_available = True
-
-        _LOGGER.info("UPDATE Sensor: " + self._attr_unique_id)
-        _LOGGER.info(self._attr_native_value)
