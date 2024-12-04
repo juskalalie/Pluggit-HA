@@ -1,8 +1,8 @@
-"""Button"""
+"""Button."""
 
-import logging
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable
+import logging
 
 from homeassistant.components.button import ButtonEntity, ButtonEntityDescription
 from homeassistant.config_entries import ConfigEntry
@@ -10,6 +10,7 @@ from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.util.dt import as_timestamp, now
 
 from .const import DOMAIN, SERIAL_NUMBER
 from .pypluggit.pluggit import Pluggit
@@ -33,16 +34,23 @@ BUTTONS: tuple[PluggitButtonEntityDescription, ...] = (
     PluggitButtonEntityDescription(
         key="date_time",
         translation_key="date_time",
-        set_fn=lambda device: device.set_date_time(),
+        set_fn=lambda device: device.set_date_time(help_time()),
     ),
 )
+
+
+def help_time() -> int:
+    """Get local time in seconds."""
+    time = now()
+    return int(as_timestamp(time) + time.utcoffset().total_seconds())
 
 
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
-):
+) -> None:
+    """Set up buttons from a config entry."""
     data = hass.data[DOMAIN][entry.entry_id]
     pluggit: Pluggit = data[DOMAIN]
     serial_number = data[SERIAL_NUMBER]
@@ -59,6 +67,8 @@ async def async_setup_entry(
 
 
 class PluggitButton(ButtonEntity):
+    """Pluggit buttons."""
+
     entity_description: PluggitButtonEntityDescription
     _attr_entity_category = EntityCategory.CONFIG
     _attr_has_entity_name = True

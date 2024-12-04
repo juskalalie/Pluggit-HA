@@ -1,4 +1,4 @@
-"""Fan"""
+"""Fan."""
 
 import logging
 import time
@@ -25,7 +25,8 @@ async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
-):
+) -> None:
+    """Set up fan from a config entry."""
     data = hass.data[DOMAIN][entry.entry_id]
     pluggit: Pluggit = data[DOMAIN]
     serial_num = data[SERIAL_NUMBER]
@@ -45,6 +46,8 @@ async def async_setup_entry(
 
 
 class PluggitFan(FanEntity):
+    """Pluggit fan."""
+
     ORDERED_NAMED_FAN_SPEEDS = [
         SpeedLevelFan.LEVEL_1,
         SpeedLevelFan.LEVEL_2,
@@ -97,11 +100,10 @@ class PluggitFan(FanEntity):
 
     @property
     def preset_mode(self) -> str | None:
-        """Return actual preset mode"""
+        """Return actual preset mode."""
         if self._currentMode in self.SUPPORTED_PRESET_MODES:
             return self._currentMode
-        else:
-            return None
+        return None
 
     @property
     def preset_modes(self) -> list[str] | None:
@@ -109,19 +111,19 @@ class PluggitFan(FanEntity):
         return self.SUPPORTED_PRESET_MODES
 
     def set_preset_mode(self, preset_mode: str) -> None:
-        """Set preset mode"""
+        """Set preset mode."""
         mode = None
         if preset_mode == CURRENT_UNIT_MODE[3]:
             mode = ActiveUnitMode.WEEK_PROGRAM_MODE
         elif preset_mode == CURRENT_UNIT_MODE[5]:
             mode = ActiveUnitMode.AWAY_MODE
         else:
-            return None
+            return
 
         self._pluggit.set_unit_mode(mode=mode)
 
     def set_percentage(self, percentage: int) -> None:
-        """Set fan speed in percentage"""
+        """Set fan speed in percentage."""
 
         named_speed = percentage_to_ordered_list_item(
             self.ORDERED_NAMED_FAN_SPEEDS, percentage
@@ -141,15 +143,14 @@ class PluggitFan(FanEntity):
 
     def turn_on(
         self,
-        speed: str = None,
-        percentage: int = None,
-        preset_mode: str = None,
+        percentage: int | None = None,
+        preset_mode: str | None = None,
         **kwargs: Any,
     ) -> None:
         """Turn on the fan."""
         if preset_mode is not None:
             self.set_preset_mode(preset_mode=preset_mode)
-            return None
+            return
 
         self._pluggit.set_speed_level(SpeedLevelFan.LEVEL_1)
 

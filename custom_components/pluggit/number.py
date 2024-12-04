@@ -1,8 +1,8 @@
-"""Number"""
+"""Numbers."""
 
-import logging
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable
+import logging
 
 from homeassistant.components.number import (
     NumberDeviceClass,
@@ -97,7 +97,8 @@ async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
-):
+) -> None:
+    """Set up numbers from a config entry."""
     data = hass.data[DOMAIN][entry.entry_id]
     pluggit: Pluggit = data[DOMAIN]
     serial_number = data[SERIAL_NUMBER]
@@ -114,6 +115,8 @@ async def async_setup_entry(
 
 
 class PluggitSensor(NumberEntity):
+    """Pluggit numbers."""
+
     entity_description: PluggitNumberEntityDescription
     _attr_entity_category = EntityCategory.CONFIG
     _attr_has_entity_name = True
@@ -139,3 +142,7 @@ class PluggitSensor(NumberEntity):
     def set_native_value(self, value: float) -> None:
         """Update the current value."""
         self.entity_description.set_fn(self._pluggit, value)
+        _LOGGER.info("SET")
+        _LOGGER.info(self._attr_unique_id)
+        _LOGGER.info(value)
+        # self.schedule_update_ha_state()

@@ -1,9 +1,9 @@
-"""Sensor"""
+"""Sensors."""
 
-import logging
+from collections.abc import Callable
 from dataclasses import dataclass
-from datetime import datetime, timezone
-from typing import Callable
+from datetime import datetime
+import logging
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -17,11 +17,13 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import StateType
+from homeassistant.util.dt import DEFAULT_TIME_ZONE, now
 
 from .const import DOMAIN, SERIAL_NUMBER
 from .pypluggit.pluggit import Pluggit
 
 _LOGGER = logging.getLogger(__name__)
+# SCAN_INTERVAL = timedelta(seconds=20)
 
 
 @dataclass(kw_only=True)
@@ -72,20 +74,17 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         key="work_time",
         translation_key="work_time",
         entity_category=EntityCategory.DIAGNOSTIC,
-        device_class=SensorDeviceClass.DURATION,
+        # device_class=SensorDeviceClass.DURATION,
         native_unit_of_measurement=UnitOfTime.HOURS,
-        suggested_display_precision=0,
-        suggested_unit_of_measurement=UnitOfTime.HOURS,
         state_class=SensorStateClass.MEASUREMENT,
+        icon="mdi:progress-clock",
         value_fn=lambda device: device.get_work_time(),
     ),
     PluggitSensorEntityDescription(
         key="filter_remain",
         translation_key="filter_remain",
-        device_class=SensorDeviceClass.DURATION,
+        # device_class=SensorDeviceClass.DURATION,
         native_unit_of_measurement=UnitOfTime.DAYS,
-        suggested_display_precision=0,
-        suggested_unit_of_measurement=UnitOfTime.DAYS,
         state_class=SensorStateClass.MEASUREMENT,
         icon="mdi:air-filter",
         value_fn=lambda device: device.get_remaining_filter_time(),
@@ -150,10 +149,10 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         key="get_bypass_manual_timeout",
         translation_key="bypass_manual_timeout",
         entity_category=EntityCategory.DIAGNOSTIC,
-        device_class=SensorDeviceClass.DURATION,
+        # device_class=SensorDeviceClass.DURATION,
         native_unit_of_measurement=UnitOfTime.MINUTES,
-        suggested_display_precision=0,
         state_class=SensorStateClass.MEASUREMENT,
+        icon="mdi:progress-clock",
         value_fn=lambda device: device.get_bypass_manual_timeout(),
     ),
     PluggitSensorEntityDescription(
@@ -162,28 +161,38 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         entity_category=EntityCategory.DIAGNOSTIC,
         device_class=SensorDeviceClass.TIMESTAMP,
         state_class=None,
-        value_fn=lambda device: datetime.fromtimestamp(
-            device.get_date_time(), tz=timezone.utc
-        ),
+        entity_registry_enabled_default=False,
+        value_fn=lambda device: help_time(device.get_date_time()),
     ),
     PluggitSensorEntityDescription(
         key="get_filter_time",
         translation_key="filter_time",
         entity_category=EntityCategory.DIAGNOSTIC,
-        device_class=SensorDeviceClass.DURATION,
+        # device_class=SensorDeviceClass.DURATION,
         native_unit_of_measurement=UnitOfTime.DAYS,
-        suggested_display_precision=0,
         state_class=SensorStateClass.MEASUREMENT,
+        icon="mdi:progress-clock",
         value_fn=lambda device: device.get_filter_time(),
     ),
 )
+
+
+def help_time(local_time: int) -> datetime | None:
+    """Get time from local seconds."""
+    if local_time is None:
+        return None
+
+    return datetime.fromtimestamp(
+        local_time - now().utcoffset().total_seconds(), tz=DEFAULT_TIME_ZONE
+    )
 
 
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
-):
+) -> None:
+    """Set up sensors from a config entry."""
     data = hass.data[DOMAIN][entry.entry_id]
     pluggit: Pluggit = data[DOMAIN]
     serial_number = data[SERIAL_NUMBER]
@@ -200,6 +209,8 @@ async def async_setup_entry(
 
 
 class PluggitSensor(SensorEntity):
+    """Pluggit sensors."""
+
     entity_description: PluggitSensorEntityDescription
     _attr_has_entity_name = True
 
@@ -230,6 +241,9 @@ class PluggitSensor(SensorEntity):
         """Fetch data for sensors."""
 
         self._attr_native_value = self.entity_description.value_fn(self._pluggit)
+        _LOGGER.info(self._attr_unique_id)
+        _LOGGER.info(self._attr_native_value)
+        _LOGGER.info(type(self._attr_native_value))
 
         if self._attr_native_value is None:
             self._is_available = False

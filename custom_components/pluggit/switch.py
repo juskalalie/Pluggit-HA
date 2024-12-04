@@ -1,4 +1,4 @@
-"""Switch"""
+"""Switch."""
 
 import logging
 import time
@@ -7,7 +7,7 @@ from typing import Any
 from homeassistant.components.switch import (
     SwitchDeviceClass,
     SwitchEntity,
-    SwitchEntityDescription
+    SwitchEntityDescription,
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -24,7 +24,7 @@ SWITCHES: tuple[SwitchEntityDescription, ...] = (
     SwitchEntityDescription(
         key="switch1",
         translation_key="summer_mode",
-        device_class=SwitchDeviceClass.SWITCH
+        device_class=SwitchDeviceClass.SWITCH,
     ),
 )
 
@@ -33,7 +33,8 @@ async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
-):
+) -> None:
+    """Set up switch from a config entry."""
     data = hass.data[DOMAIN][entry.entry_id]
     pluggit: Pluggit = data[DOMAIN]
     serial_number = data[SERIAL_NUMBER]
@@ -50,6 +51,8 @@ async def async_setup_entry(
 
 
 class PluggitSwitch(SwitchEntity):
+    """Pluggit switch."""
+
     entity_description: SwitchEntityDescription
     _attr_has_entity_name = True
 
@@ -82,7 +85,7 @@ class PluggitSwitch(SwitchEntity):
         """Return if entity is available."""
         return self._is_available
 
-    def turn_on(self, **kwargs) -> None:
+    def turn_on(self, **kwargs: Any) -> None:
         """Turn the entity on."""
         self._pluggit.set_unit_mode(ActiveUnitMode.SUMMER_MODE)
 

@@ -1,7 +1,10 @@
+"""The Pluggit config flow."""
+
 import logging
 from typing import Any
 
 import voluptuous as vol
+
 from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 
 from .const import CONFIG_HOST, DOMAIN, SERIAL_NUMBER
@@ -20,9 +23,7 @@ async def validate_input(data: dict[str, Any]) -> str:
     host = data[CONFIG_HOST]
     pluggit = Pluggit(host)
 
-    serial_number = pluggit.get_serial_number()
-
-    return serial_number
+    return pluggit.get_serial_number()
 
 
 class PluggitConfigFlow(ConfigFlow, domain=DOMAIN):
@@ -33,6 +34,7 @@ class PluggitConfigFlow(ConfigFlow, domain=DOMAIN):
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
+        """Show form and get host address."""
         errors = {}
 
         if user_input is not None:

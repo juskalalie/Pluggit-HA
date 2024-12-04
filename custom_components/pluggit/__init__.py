@@ -10,10 +10,10 @@ from .const import CONFIG_HOST, DOMAIN, SERIAL_NUMBER
 from .pypluggit.pluggit import Pluggit
 
 PLATFORMS = [
-    Platform.FAN,
-    Platform.SENSOR,
-    Platform.NUMBER,
     Platform.BUTTON,
+    Platform.FAN,
+    Platform.NUMBER,
+    Platform.SENSOR,
     Platform.SWITCH,
 ]
 _LOGGER = logging.getLogger(__name__)
