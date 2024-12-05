@@ -241,9 +241,6 @@ class PluggitSensor(SensorEntity):
         """Fetch data for sensors."""
 
         self._attr_native_value = self.entity_description.value_fn(self._pluggit)
-        _LOGGER.info(self._attr_unique_id)
-        _LOGGER.info(self._attr_native_value)
-        _LOGGER.info(type(self._attr_native_value))
 
         if self._attr_native_value is None:
             self._is_available = False

@@ -142,7 +142,3 @@ class PluggitSensor(NumberEntity):
     def set_native_value(self, value: float) -> None:
         """Update the current value."""
         self.entity_description.set_fn(self._pluggit, value)
-        _LOGGER.info("SET")
-        _LOGGER.info(self._attr_unique_id)
-        _LOGGER.info(value)
-        # self.schedule_update_ha_state()
