@@ -76,6 +76,9 @@
             "get_time": {
                 "name": "Time"
             },
+            "speed_level": {
+                "name": "Speed level"
+            },
             "t1_outdoor": {
                 "name": "T1 Outdoor"
             },
@@ -87,6 +90,9 @@
             },
             "t4_exhaust": {
                 "name": "T4 Exhaust"
+            },
+            "unit_mode": {
+                "name": "Mode"
             },
             "work_time": {
                 "name": "Work time"

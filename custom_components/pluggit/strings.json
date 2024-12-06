@@ -1,101 +1,107 @@
 {
-  "config": {
-    "step": {
-      "user": {
-        "data": {
-          "host": "Host"
+    "config": {
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Host"
+                }
+            }
         }
-      }
+    },
+    "entity": {
+        "sensor": {
+            "t1_outdoor": {
+                "name": "T1 Outdoor"
+            },
+            "t2_supply": {
+                "name": "T2 Supply"
+            },
+            "t3_extract": {
+                "name": "T3 Extract"
+            },
+            "t4_exhaust": {
+                "name": "T4 Exhaust"
+            },
+            "work_time": {
+                "name": "Work time"
+            },
+            "filter_remain": {
+                "name": "Filter remain"
+            },
+            "filter_dirtiness": {
+                "name": "Filter dirtiness"
+            },
+            "bypass_state": {
+                "name": "Bypass state"
+            },
+            "bypass_tmin": {
+                "name": "Bypass Tmin"
+            },
+            "bypass_tmax": {
+                "name": "Bypass Tmax"
+            },
+            "bypass_tmin_summer": {
+                "name": "Bypass Tmin summer"
+            },
+            "bypass_tmax_summer": {
+                "name": "Bypass Tmax summer"
+            },
+            "bypass_manual_timeout": {
+                "name": "Manual bypass duration"
+            },
+            "get_time": {
+                "name": "Time"
+            },
+            "get_filter_time": {
+                "name": "Filter time"
+            },
+            "filter_time": {
+                "name": "Filter lifetime"
+            },
+            "unit_mode": {
+                "name": "Mode"
+            },
+            "speed_level": {
+                "name": "Speed level"
+            }
+        },
+        "fan": {
+            "ventilation": {
+                "name": "Ventilation"
+            }
+        },
+        "number": {
+            "bypass_tmin": {
+                "name": "Bypass Tmin"
+            },
+            "bypass_tmax": {
+                "name": "Bypass Tmax"
+            },
+            "bypass_tmin_summer": {
+                "name": "Bypass Tmin summer"
+            },
+            "bypass_tmax_summer": {
+                "name": "Bypass Tmax summer"
+            },
+            "filter_time": {
+                "name": "Filter lifetime"
+            },
+            "bypass_manual_timeout": {
+                "name": "Manual bypass duration"
+            }
+        },
+        "button": {
+            "filter_reset": {
+                "name": "Filter reset"
+            },
+            "date_time": {
+                "name": "Set time"
+            }
+        },
+        "switch": {
+            "summer_mode": {
+                "name": "Summer mode"
+            }
+        }
     }
-  },
-  "entity": {
-    "sensor": {
-      "t1_outdoor": {
-        "name": "T1 Outdoor"
-      },
-      "t2_supply": {
-        "name": "T2 Supply"
-      },
-      "t3_extract": {
-        "name": "T3 Extract"
-      },
-      "t4_exhaust": {
-        "name": "T4 Exhaust"
-      },
-      "work_time": {
-        "name": "Work time"
-      },
-      "filter_remain": {
-        "name": "Filter remain"
-      },
-      "filter_dirtiness": {
-        "name": "Filter dirtiness"
-      },
-      "bypass_state": {
-        "name": "Bypass state"
-      },
-      "bypass_tmin":{
-        "name": "Bypass Tmin"
-      },
-      "bypass_tmax":{
-        "name": "Bypass Tmax"
-      },
-      "bypass_tmin_summer":{
-        "name": "Bypass Tmin summer"
-      },
-      "bypass_tmax_summer":{
-        "name": "Bypass Tmax summer"
-      },
-      "bypass_manual_timeout":{
-        "name": "Manual bypass duration"
-      },
-      "get_time":{
-        "name": "Time"
-      },
-      "get_filter_time":{
-        "name": "Filter time"
-      },
-      "filter_time":{
-        "name": "Filter lifetime"
-      }
-    },
-    "fan":{
-      "ventilation":{
-        "name": "Ventilation"
-      }
-    },
-    "number":{
-      "bypass_tmin":{
-        "name": "Bypass Tmin"
-      },
-      "bypass_tmax":{
-        "name": "Bypass Tmax"
-      },
-      "bypass_tmin_summer":{
-        "name": "Bypass Tmin summer"
-      },
-      "bypass_tmax_summer":{
-        "name": "Bypass Tmax summer"
-      },
-      "filter_time":{
-        "name": "Filter lifetime"
-      },
-      "bypass_manual_timeout":{
-        "name": "Manual bypass duration"
-      }
-    },
-    "button":{
-      "filter_reset":{
-        "name": "Filter reset"
-      },
-      "date_time":{
-        "name": "Set time"
-      }
-    },
-    "switch":{
-      "summer_mode":{
-        "name": "Summer mode"
-      }
-    }
-  }
 }

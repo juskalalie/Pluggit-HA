@@ -20,7 +20,13 @@ from homeassistant.helpers.typing import StateType
 from homeassistant.util.dt import DEFAULT_TIME_ZONE, now
 
 from .const import DOMAIN, SERIAL_NUMBER
-from .pypluggit.pluggit import Pluggit
+from .pypluggit.pluggit import (
+    BYPASS_STATE,
+    CURRENT_UNIT_MODE,
+    DEGREE_OF_DIRTINESS,
+    Pluggit,
+    SpeedLevelFan,
+)
 
 _LOGGER = logging.getLogger(__name__)
 # SCAN_INTERVAL = timedelta(seconds=20)
@@ -92,17 +98,16 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
     PluggitSensorEntityDescription(
         key="filter_dirtiness",
         translation_key="filter_dirtiness",
-        device_class=None,
-        native_unit_of_measurement=None,
-        state_class=None,
+        device_class=SensorDeviceClass.ENUM,
+        options=list(DEGREE_OF_DIRTINESS.values()),
+        icon="mdi:liquid-spot",
         value_fn=lambda device: device.get_filter_dirtiness(),
     ),
     PluggitSensorEntityDescription(
         key="bypass_state",
         translation_key="bypass_state",
-        device_class=None,
-        native_unit_of_measurement=None,
-        state_class=None,
+        device_class=SensorDeviceClass.ENUM,
+        options=list(BYPASS_STATE.values()),
         value_fn=lambda device: device.get_bypass_actual_state(),
     ),
     PluggitSensorEntityDescription(
@@ -173,6 +178,23 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         icon="mdi:progress-clock",
         value_fn=lambda device: device.get_filter_time(),
+    ),
+    PluggitSensorEntityDescription(
+        key="get_unit_mode",
+        translation_key="unit_mode",
+        device_class=SensorDeviceClass.ENUM,
+        options=list(CURRENT_UNIT_MODE.values()),
+        icon="mdi:information-outline",
+        value_fn=lambda device: device.get_current_unit_mode(),
+    ),
+    PluggitSensorEntityDescription(
+        key="get_spped_level",
+        translation_key="speed_level",
+        device_class=SensorDeviceClass.ENUM,
+        options=[e.value for e in SpeedLevelFan],
+        entity_registry_enabled_default=False,
+        icon="mdi:fan",
+        value_fn=lambda device: device.get_speed_level(),
     ),
 )
 

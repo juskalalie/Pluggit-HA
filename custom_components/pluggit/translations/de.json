@@ -54,6 +54,12 @@
         },
         "filter_time":{
           "name": "Filterlaufzeit"
+        },
+        "unit_mode":{
+          "name": "Modus"
+        },
+        "speed_level":{
+          "name": "Stufe"
         }
       },
       "fan":{
