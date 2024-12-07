@@ -55,9 +55,13 @@ class PluggitFan(FanEntity):
         SpeedLevelFan.LEVEL_4,
     ]
     SUPPORTED_PRESET_MODES = [CURRENT_UNIT_MODE[3], CURRENT_UNIT_MODE[5]]
-    _attr_supported_features = FanEntityFeature.PRESET_MODE | FanEntityFeature.SET_SPEED
+    _attr_supported_features = (
+        FanEntityFeature.PRESET_MODE
+        | FanEntityFeature.SET_SPEED
+        | FanEntityFeature.TURN_ON
+        | FanEntityFeature.TURN_OFF
+    )
     _attr_has_entity_name = True
-    # _attr_name = "Ventilation"
 
     def __init__(self, pluggit: Pluggit, device: DeviceInfo) -> None:
         """Initialise Ventilation."""
