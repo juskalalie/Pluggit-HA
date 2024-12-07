@@ -32,7 +32,14 @@
                 "name": "Filter dirtiness"
             },
             "bypass_state": {
-                "name": "Bypass state"
+                "name": "Bypass state",
+                "state": {
+                    "Closed": "Closed",
+                    "In Process": "In Process",
+                    "Closing": "Closing",
+                    "Opening": "Opening",
+                    "Opened": "Opened"
+                }
             },
             "bypass_tmin": {
                 "name": "Bypass Tmin"
@@ -59,7 +66,26 @@
                 "name": "Filter lifetime"
             },
             "unit_mode": {
-                "name": "Mode"
+                "name": "Mode",
+                "state": {
+                    "Standby": "Standby",
+                    "Manual": "Manual",
+                    "Demand": "Demand",
+                    "Week Program": "Week Program",
+                    "Servo-flow": "Servo-flow",
+                    "Away": "Away",
+                    "Summer": "Summer",
+                    "DI Override": "DI Override",
+                    "Hygrostat Override": "Hygrostat Override",
+                    "Fireplace": "Fireplace",
+                    "Installer": "Installer",
+                    "Fail Safe 1": "Fail Safe 1",
+                    "Fail Safe 2": "Fail Safe 2",
+                    "Fail Off": "Fail Off",
+                    "Defrost Off": "Defrost Off",
+                    "Defrost": "Defrost",
+                    "Night": "Night"
+                }
             },
             "speed_level": {
                 "name": "Speed level"
@@ -67,7 +93,15 @@
         },
         "fan": {
             "ventilation": {
-                "name": "Ventilation"
+                "name": "Ventilation",
+                "state_attributes": {
+                    "preset_mode": {
+                        "state": {
+                            "Week Program": "Week Program",
+                            "Away": "Away"
+                        }
+                    }
+                }
             }
         },
         "number": {

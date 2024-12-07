@@ -1,104 +1,138 @@
 {
     "config": {
-      "step": {
-        "user": {
-          "data": {
-            "host": "Host"
-          }
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Host"
+                }
+            }
         }
-      }
     },
     "entity": {
-      "sensor": {
-        "t1_outdoor": {
-          "name": "T1 Frischluft"
+        "sensor": {
+            "t1_outdoor": {
+                "name": "T1 Frischluft"
+            },
+            "t2_supply": {
+                "name": "T2 Zuluft"
+            },
+            "t3_extract": {
+                "name": "T3 Abluft"
+            },
+            "t4_exhaust": {
+                "name": "T4 Fortluft"
+            },
+            "work_time": {
+                "name": "Laufzeit Lüftung"
+            },
+            "filter_remain": {
+                "name": "Filterwechsel"
+            },
+            "filter_dirtiness": {
+                "name": "Filterverschmutzung"
+            },
+            "bypass_state": {
+                "name": "Bypass Zustand",
+                "state": {
+                    "Closed": "Geschlossen",
+                    "In Process": "In Bearbeitung",
+                    "Closing": "Schließen...",
+                    "Opening": "Öffnen...",
+                    "Opened": "Geöffnet"
+                }
+            },
+            "bypass_tmin": {
+                "name": "Bypass Tmin"
+            },
+            "bypass_tmax": {
+                "name": "Bypass Tmax"
+            },
+            "bypass_tmin_summer": {
+                "name": "Bypass Tmin Sommer"
+            },
+            "bypass_tmax_summer": {
+                "name": "Bypass Tmax Sommer"
+            },
+            "bypass_manual_timeout": {
+                "name": "Dauer manueller Bypass"
+            },
+            "get_time": {
+                "name": "Zeit"
+            },
+            "filter_time": {
+                "name": "Filterlaufzeit"
+            },
+            "unit_mode": {
+                "name": "Modus",
+                "state": {
+                    "Standby": "Standby",
+                    "Manual": "Manuell",
+                    "Demand": "Demand",
+                    "Week Program": "Wochenprogramm",
+                    "Servo-flow": "Servo-flow",
+                    "Away": "Urlaubsmodus",
+                    "Summer": "Sommermodus",
+                    "DI Override": "DI Override",
+                    "Hygrostat Override": "Hygrostat Override",
+                    "Fireplace": "Kamin",
+                    "Installer": "Installer",
+                    "Fail Safe 1": "Fail Safe 1",
+                    "Fail Safe 2": "Fail Safe 2",
+                    "Fail Off": "Fail Off",
+                    "Defrost Off": "Enteisen Aus",
+                    "Defrost": "Enteisen",
+                    "Night": "Nachtmodus"
+                }
+            },
+            "speed_level": {
+                "name": "Stufe"
+            }
         },
-        "t2_supply": {
-          "name": "T2 Zuluft"
+        "fan": {
+            "ventilation": {
+                "name": "Raumlüftung",
+                "state_attributes": {
+                    "preset_mode": {
+                        "state": {
+                            "Week Program": "Wochenprogramm",
+                            "Away": "Urlaubsmodus"
+                        }
+                    }
+                }
+            }
         },
-        "t3_extract": {
-          "name": "T3 Abluft"
+        "number": {
+            "bypass_tmin": {
+                "name": "Bypass Tmin"
+            },
+            "bypass_tmax": {
+                "name": "Bypass Tmax"
+            },
+            "bypass_tmin_summer": {
+                "name": "Bypass Tmin Sommer"
+            },
+            "bypass_tmax_summer": {
+                "name": "Bypass Tmax Sommer"
+            },
+            "filter_time": {
+                "name": "Filterlaufzeit"
+            },
+            "bypass_manual_timeout": {
+                "name": "Dauer manueller Bypass"
+            }
         },
-        "t4_exhaust": {
-          "name": "T4 Fortluft"
+        "button": {
+            "filter_reset": {
+                "name": "Filter Reset"
+            },
+            "date_time": {
+                "name": "Zeit setzen"
+            }
         },
-        "work_time": {
-          "name": "Laufzeit Lüftung"
-        },
-        "filter_remain": {
-          "name": "Filterwechsel"
-        },
-        "filter_dirtiness": {
-          "name": "Filterverschmutzung"
-        },
-        "bypass_state": {
-          "name": "Bypass Zustand"
-        },
-        "bypass_tmin":{
-          "name": "Bypass Tmin"
-        },
-        "bypass_tmax":{
-          "name": "Bypass Tmax"
-        },
-        "bypass_tmin_summer":{
-          "name": "Bypass Tmin Sommer"
-        },
-        "bypass_tmax_summer":{
-          "name": "Bypass Tmax Sommer"
-        },
-        "bypass_manual_timeout":{
-          "name": "Dauer manueller Bypass"
-        },
-        "get_time":{
-          "name": "Zeit"
-        },
-        "filter_time":{
-          "name": "Filterlaufzeit"
-        },
-        "unit_mode":{
-          "name": "Modus"
-        },
-        "speed_level":{
-          "name": "Stufe"
+        "switch": {
+            "summer_mode": {
+                "name": "Sommermodus"
+            }
         }
-      },
-      "fan":{
-        "ventilation":{
-          "name": "Raumlüftung"
-        }
-      },
-      "number":{
-        "bypass_tmin":{
-          "name": "Bypass Tmin"
-        },
-        "bypass_tmax":{
-          "name": "Bypass Tmax"
-        },
-        "bypass_tmin_summer":{
-          "name": "Bypass Tmin Sommer"
-        },
-        "bypass_tmax_summer":{
-          "name": "Bypass Tmax Sommer"
-        },
-        "filter_time":{
-          "name": "Filterlaufzeit"
-        },
-        "bypass_manual_timeout":{
-          "name": "Dauer manueller Bypass"
-        }
-      },
-      "button":{
-        "filter_reset":{
-          "name": "Filter Reset"
-        },
-        "date_time":{
-          "name": "Zeit setzen"
-        }
-      },
-      "switch":{
-        "summer_mode":{
-          "name": "Sommer Modus"
-        }
-      }
     }
-  }
+}

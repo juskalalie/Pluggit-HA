@@ -19,7 +19,15 @@
         },
         "fan": {
             "ventilation": {
-                "name": "Ventilation"
+                "name": "Ventilation",
+                "state_attributes": {
+                    "preset_mode": {
+                        "state": {
+                            "Away": "Away",
+                            "Week Program": "Week Program"
+                        }
+                    }
+                }
             }
         },
         "number": {
@@ -47,7 +55,14 @@
                 "name": "Manual bypass duration"
             },
             "bypass_state": {
-                "name": "Bypass state"
+                "name": "Bypass state",
+                "state": {
+                    "Closed": "Closed",
+                    "Closing": "Closing",
+                    "In Process": "In Process",
+                    "Opened": "Opened",
+                    "Opening": "Opening"
+                }
             },
             "bypass_tmax": {
                 "name": "Bypass Tmax"
@@ -92,7 +107,26 @@
                 "name": "T4 Exhaust"
             },
             "unit_mode": {
-                "name": "Mode"
+                "name": "Mode",
+                "state": {
+                    "Away": "Away",
+                    "DI Override": "DI Override",
+                    "Defrost": "Defrost",
+                    "Defrost Off": "Defrost Off",
+                    "Demand": "Demand",
+                    "Fail Off": "Fail Off",
+                    "Fail Safe 1": "Fail Safe 1",
+                    "Fail Safe 2": "Fail Safe 2",
+                    "Fireplace": "Fireplace",
+                    "Hygrostat Override": "Hygrostat Override",
+                    "Installer": "Installer",
+                    "Manual": "Manual",
+                    "Night": "Night",
+                    "Servo-flow": "Servo-flow",
+                    "Standby": "Standby",
+                    "Summer": "Summer",
+                    "Week Program": "Week Program"
+                }
             },
             "work_time": {
                 "name": "Work time"
