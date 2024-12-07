@@ -95,9 +95,9 @@ CURRENT_UNIT_MODE = {
 }
 
 DEGREE_OF_DIRTINESS = {
-    0: "Below 33%",
-    1: "Between 33% and 67%",
-    2: "Between 67% and 100%",
+    0: "0 - 33%",
+    1: "34 - 67%",
+    2: "68 - 99%",
     3: "100%",
 }
 
