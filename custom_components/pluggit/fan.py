@@ -145,6 +145,20 @@ class PluggitFan(FanEntity):
         """Return if entity is available."""
         return self._is_available
 
+    @property
+    def icon(self) -> str | None:
+        """Return icon depending on speed."""
+        if self._speedLevel is SpeedLevelFan.LEVEL_1:
+            return "mdi:fan-speed-1"
+        if self._speedLevel is SpeedLevelFan.LEVEL_2:
+            return "mdi:fan-speed-2"
+        if self._speedLevel is SpeedLevelFan.LEVEL_3:
+            return "mdi:fan-speed-3"
+        if self._speedLevel is SpeedLevelFan.LEVEL_4:
+            return "mdi:fan-plus"
+
+        return None
+
     def turn_on(
         self,
         percentage: int | None = None,
