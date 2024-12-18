@@ -111,56 +111,6 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         value_fn=lambda device: device.get_bypass_actual_state(),
     ),
     PluggitSensorEntityDescription(
-        key="get_bypass_tmin",
-        translation_key="bypass_tmin",
-        entity_category=EntityCategory.DIAGNOSTIC,
-        device_class=SensorDeviceClass.TEMPERATURE,
-        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-        state_class=SensorStateClass.MEASUREMENT,
-        suggested_display_precision=1,
-        value_fn=lambda device: device.get_bypass_tmin(),
-    ),
-    PluggitSensorEntityDescription(
-        key="get_bypass_tmax",
-        translation_key="bypass_tmax",
-        entity_category=EntityCategory.DIAGNOSTIC,
-        device_class=SensorDeviceClass.TEMPERATURE,
-        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-        state_class=SensorStateClass.MEASUREMENT,
-        suggested_display_precision=1,
-        value_fn=lambda device: device.get_bypass_tmax(),
-    ),
-    PluggitSensorEntityDescription(
-        key="get_bypass_tmin_summer",
-        translation_key="bypass_tmin_summer",
-        entity_category=EntityCategory.DIAGNOSTIC,
-        device_class=SensorDeviceClass.TEMPERATURE,
-        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-        state_class=SensorStateClass.MEASUREMENT,
-        suggested_display_precision=1,
-        value_fn=lambda device: device.get_bypass_tmin_summer(),
-    ),
-    PluggitSensorEntityDescription(
-        key="get_bypass_tmax_summer",
-        translation_key="bypass_tmax_summer",
-        entity_category=EntityCategory.DIAGNOSTIC,
-        device_class=SensorDeviceClass.TEMPERATURE,
-        native_unit_of_measurement=UnitOfTemperature.CELSIUS,
-        state_class=SensorStateClass.MEASUREMENT,
-        suggested_display_precision=1,
-        value_fn=lambda device: device.get_bypass_tmax_summer(),
-    ),
-    PluggitSensorEntityDescription(
-        key="get_bypass_manual_timeout",
-        translation_key="bypass_manual_timeout",
-        entity_category=EntityCategory.DIAGNOSTIC,
-        # device_class=SensorDeviceClass.DURATION,
-        native_unit_of_measurement=UnitOfTime.MINUTES,
-        state_class=SensorStateClass.MEASUREMENT,
-        icon="mdi:progress-clock",
-        value_fn=lambda device: device.get_bypass_manual_timeout(),
-    ),
-    PluggitSensorEntityDescription(
         key="get_time",
         translation_key="get_time",
         entity_category=EntityCategory.DIAGNOSTIC,
@@ -168,16 +118,6 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         state_class=None,
         entity_registry_enabled_default=False,
         value_fn=lambda device: help_time(device.get_date_time()),
-    ),
-    PluggitSensorEntityDescription(
-        key="get_filter_time",
-        translation_key="filter_time",
-        entity_category=EntityCategory.DIAGNOSTIC,
-        # device_class=SensorDeviceClass.DURATION,
-        native_unit_of_measurement=UnitOfTime.DAYS,
-        state_class=SensorStateClass.MEASUREMENT,
-        icon="mdi:progress-clock",
-        value_fn=lambda device: device.get_filter_time(),
     ),
     PluggitSensorEntityDescription(
         key="get_unit_mode",
@@ -233,9 +173,6 @@ async def async_setup_entry(
 class PluggitSensor(SensorEntity):
     """Pluggit sensors."""
 
-    entity_description: PluggitSensorEntityDescription
-    _attr_has_entity_name = True
-
     def __init__(
         self,
         pluggit: Pluggit,
@@ -247,17 +184,11 @@ class PluggitSensor(SensorEntity):
         self.entity_description = description
         self._serial_number = str(serial_number)
         self._attr_unique_id = description.key
-        self._is_available = False
-
-    @property
-    def device_info(self) -> DeviceInfo:
-        """Return the device info."""
-        return DeviceInfo(name="Pluggit", identifiers={(DOMAIN, self._serial_number)})
-
-    @property
-    def available(self) -> bool:
-        """Return if entity is available."""
-        return self._is_available
+        self._attr_has_entity_name = True
+        self._attr_available = False
+        self._attr_device_info = DeviceInfo(
+            name="Pluggit", identifiers={(DOMAIN, self._serial_number)}
+        )
 
     def update(self) -> None:
         """Fetch data for sensors."""
@@ -265,6 +196,6 @@ class PluggitSensor(SensorEntity):
         self._attr_native_value = self.entity_description.value_fn(self._pluggit)
 
         if self._attr_native_value is None:
-            self._is_available = False
+            self._attr_available = False
         else:
-            self._is_available = True
+            self._attr_available = True

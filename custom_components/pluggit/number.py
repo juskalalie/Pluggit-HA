@@ -14,6 +14,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory, UnitOfTemperature, UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.entity import StateType
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN, SERIAL_NUMBER
@@ -26,7 +27,8 @@ _LOGGER = logging.getLogger(__name__)
 class PluggitNumberEntityDescription(NumberEntityDescription):
     """Describes Pluggit number entity."""
 
-    set_fn: Callable[[Pluggit, float], None]
+    get_fn: Callable[[Pluggit], StateType]
+    set_fn: Callable[[Pluggit, StateType], None]
 
 
 NUMBERS: tuple[PluggitNumberEntityDescription, ...] = (
@@ -38,6 +40,7 @@ NUMBERS: tuple[PluggitNumberEntityDescription, ...] = (
         native_max_value=15,
         native_min_value=12,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        get_fn=lambda device: device.get_bypass_tmin(),
         set_fn=lambda device, temp: device.set_bypass_tmin(temp),
     ),
     PluggitNumberEntityDescription(
@@ -48,6 +51,7 @@ NUMBERS: tuple[PluggitNumberEntityDescription, ...] = (
         native_max_value=27,
         native_min_value=21,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        get_fn=lambda device: device.get_bypass_tmax(),
         set_fn=lambda device, temp: device.set_bypass_tmax(temp),
     ),
     PluggitNumberEntityDescription(
@@ -58,6 +62,7 @@ NUMBERS: tuple[PluggitNumberEntityDescription, ...] = (
         native_max_value=17,
         native_min_value=12,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        get_fn=lambda device: device.get_bypass_tmin_summer(),
         set_fn=lambda device, temp: device.set_bypass_tmin_summer(temp),
     ),
     PluggitNumberEntityDescription(
@@ -68,6 +73,7 @@ NUMBERS: tuple[PluggitNumberEntityDescription, ...] = (
         native_max_value=30,
         native_min_value=21,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        get_fn=lambda device: device.get_bypass_tmax_summer(),
         set_fn=lambda device, temp: device.set_bypass_tmax_summer(temp),
     ),
     PluggitNumberEntityDescription(
@@ -78,6 +84,7 @@ NUMBERS: tuple[PluggitNumberEntityDescription, ...] = (
         native_max_value=360,
         native_min_value=0,
         native_unit_of_measurement=UnitOfTime.DAYS,
+        get_fn=lambda device: device.get_filter_time(),
         set_fn=lambda device, temp: device.set_default_filter_time(int(temp)),
     ),
     PluggitNumberEntityDescription(
@@ -88,6 +95,7 @@ NUMBERS: tuple[PluggitNumberEntityDescription, ...] = (
         native_max_value=480,
         native_min_value=60,
         native_unit_of_measurement=UnitOfTime.MINUTES,
+        get_fn=lambda device: device.get_bypass_manual_timeout(),
         set_fn=lambda device, temp: device.set_bypass_manual_timeout(int(temp)),
     ),
 )
@@ -117,10 +125,6 @@ async def async_setup_entry(
 class PluggitSensor(NumberEntity):
     """Pluggit numbers."""
 
-    entity_description: PluggitNumberEntityDescription
-    _attr_entity_category = EntityCategory.CONFIG
-    _attr_has_entity_name = True
-
     def __init__(
         self,
         pluggit: Pluggit,
@@ -132,13 +136,23 @@ class PluggitSensor(NumberEntity):
         self.entity_description = description
         self._serial_number = str(serial_number)
         self._attr_unique_id = description.key
-        self._attr_native_value = description.native_min_value
-
-    @property
-    def device_info(self) -> DeviceInfo:
-        """Return the device info."""
-        return DeviceInfo(name="Pluggit", identifiers={(DOMAIN, self._serial_number)})
+        self._attr_has_entity_name = True
+        self._attr_entity_category = EntityCategory.CONFIG
+        self._attr_available = False
+        self._attr_device_info = DeviceInfo(
+            name="Pluggit", identifiers={(DOMAIN, self._serial_number)}
+        )
 
     def set_native_value(self, value: float) -> None:
         """Update the current value."""
         self.entity_description.set_fn(self._pluggit, value)
+
+    def update(self) -> None:
+        """Fetch data for numbers."""
+
+        self._attr_native_value = self.entity_description.get_fn(self._pluggit)
+
+        if self._attr_native_value is None:
+            self._attr_available = False
+        else:
+            self._attr_available = True
