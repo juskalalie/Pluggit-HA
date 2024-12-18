@@ -54,33 +54,45 @@ class PluggitFan(FanEntity):
         SpeedLevelFan.LEVEL_3,
         SpeedLevelFan.LEVEL_4,
     ]
-    SUPPORTED_PRESET_MODES = [CURRENT_UNIT_MODE[3], CURRENT_UNIT_MODE[5]]
-    _attr_supported_features = (
-        FanEntityFeature.PRESET_MODE
-        | FanEntityFeature.SET_SPEED
-        | FanEntityFeature.TURN_ON
-        | FanEntityFeature.TURN_OFF
-    )
-    _attr_has_entity_name = True
+    SUPPORTED_PRESET_MODES = [
+        CURRENT_UNIT_MODE[3],
+        CURRENT_UNIT_MODE[5],
+        CURRENT_UNIT_MODE[6],
+        CURRENT_UNIT_MODE[9],
+    ]
 
     def __init__(self, pluggit: Pluggit, device: DeviceInfo) -> None:
         """Initialise Ventilation."""
         self._pluggit = pluggit
-        self._device = device
         self._speedLevel = SpeedLevelFan.LEVEL_1
         self._currentMode = CURRENT_UNIT_MODE[0]
         self._attr_unique_id = "fan"
-        self._is_available = False
+        self._attr_available = False
+        self._attr_has_entity_name = True
+        self._attr_device_info = device
+        self._attr_translation_key = "ventilation"
+        self._attr_supported_features = (
+            FanEntityFeature.PRESET_MODE
+            | FanEntityFeature.SET_SPEED
+            | FanEntityFeature.TURN_ON
+            | FanEntityFeature.TURN_OFF
+        )
 
-    @property
-    def device_info(self) -> DeviceInfo:
-        """Return the device info."""
-        return self._device
+    def __set_unit_mode(self, mode: ActiveUnitMode, speed: SpeedLevelFan | None = None):
+        if self._currentMode is not mode:
+            if self._currentMode == CURRENT_UNIT_MODE[6]:
+                self._pluggit.set_unit_mode(ActiveUnitMode.END_SUMMER_MODE)
+            elif self._currentMode == CURRENT_UNIT_MODE[9]:
+                self._pluggit.set_unit_mode(ActiveUnitMode.END_FIREPLACE_MODE)
 
-    @property
-    def translation_key(self):
-        """Return translation key."""
-        return "ventilation"
+            time.sleep(100 / 1000)
+            self._pluggit.set_unit_mode(mode=mode)
+
+        if speed is not None:
+            time.sleep(100 / 1000)
+            ret = self._pluggit.get_current_unit_mode()
+            if ret == CURRENT_UNIT_MODE[1]:
+                self._pluggit.set_speed_level(speed=speed)
 
     @property
     def is_on(self) -> bool | None:
@@ -116,15 +128,20 @@ class PluggitFan(FanEntity):
 
     def set_preset_mode(self, preset_mode: str) -> None:
         """Set preset mode."""
+
         mode = None
         if preset_mode == CURRENT_UNIT_MODE[3]:
             mode = ActiveUnitMode.WEEK_PROGRAM_MODE
         elif preset_mode == CURRENT_UNIT_MODE[5]:
             mode = ActiveUnitMode.AWAY_MODE
+        elif preset_mode == CURRENT_UNIT_MODE[6]:
+            mode = ActiveUnitMode.SUMMER_MODE
+        elif preset_mode == CURRENT_UNIT_MODE[9]:
+            mode = ActiveUnitMode.FIREPLACE_MODE
         else:
             return
 
-        self._pluggit.set_unit_mode(mode=mode)
+        self.__set_unit_mode(mode=mode)
 
     def set_percentage(self, percentage: int) -> None:
         """Set fan speed in percentage."""
@@ -135,15 +152,7 @@ class PluggitFan(FanEntity):
         if percentage == 0:
             named_speed = SpeedLevelFan.LEVEL_0
 
-        if self._currentMode is not CURRENT_UNIT_MODE[1]:
-            self._pluggit.set_unit_mode(ActiveUnitMode.MANUAL_MODE)
-
-        self._pluggit.set_speed_level(speed=named_speed)
-
-    @property
-    def available(self) -> bool:
-        """Return if entity is available."""
-        return self._is_available
+        self.__set_unit_mode(mode=ActiveUnitMode.MANUAL_MODE, speed=named_speed)
 
     @property
     def icon(self) -> str | None:
@@ -174,10 +183,9 @@ class PluggitFan(FanEntity):
 
     def turn_off(self, **kwargs: Any) -> None:
         """Turn off the fan."""
-        if self._currentMode is not CURRENT_UNIT_MODE[1]:
-            self._pluggit.set_unit_mode(ActiveUnitMode.MANUAL_MODE)
-
-        self._pluggit.set_speed_level(SpeedLevelFan.LEVEL_0)
+        self.__set_unit_mode(
+            mode=ActiveUnitMode.MANUAL_MODE, speed=SpeedLevelFan.LEVEL_0
+        )
 
     def update(self) -> None:
         """Fetch data for fan."""
@@ -191,6 +199,6 @@ class PluggitFan(FanEntity):
         self._currentMode = self._pluggit.get_current_unit_mode()
 
         if self._speedLevel is None or self._currentMode is None:
-            self._is_available = False
+            self._attr_available = False
         else:
-            self._is_available = True
+            self._attr_available = True
