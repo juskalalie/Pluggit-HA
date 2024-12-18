@@ -69,10 +69,6 @@ async def async_setup_entry(
 class PluggitButton(ButtonEntity):
     """Pluggit buttons."""
 
-    entity_description: PluggitButtonEntityDescription
-    _attr_entity_category = EntityCategory.CONFIG
-    _attr_has_entity_name = True
-
     def __init__(
         self,
         pluggit: Pluggit,
@@ -84,12 +80,20 @@ class PluggitButton(ButtonEntity):
         self.entity_description = description
         self._serial_number = str(serial_number)
         self._attr_unique_id = description.key
-
-    @property
-    def device_info(self) -> DeviceInfo:
-        """Return the device info."""
-        return DeviceInfo(name="Pluggit", identifiers={(DOMAIN, self._serial_number)})
+        self._attr_entity_category = EntityCategory.CONFIG
+        self._attr_has_entity_name = True
+        self._attr_available = False
+        self._attr_device_info = DeviceInfo(
+            name="Pluggit", identifiers={(DOMAIN, self._serial_number)}
+        )
 
     def press(self) -> None:
         """Handle the button press."""
         self.entity_description.set_fn(self._pluggit)
+
+    def update(self) -> None:
+        """Check if button is available."""
+        if self._pluggit.get_unit_type() is None:
+            self._attr_available = False
+        else:
+            self._attr_available = True
