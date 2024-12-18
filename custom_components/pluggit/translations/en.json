@@ -24,6 +24,8 @@
                     "preset_mode": {
                         "state": {
                             "Away": "Away",
+                            "Fireplace": "Fireplace",
+                            "Summer": "Summer",
                             "Week Program": "Week Program"
                         }
                     }
@@ -50,10 +52,12 @@
                 "name": "Filter lifetime"
             }
         },
+        "select": {
+            "select_week": {
+                "name": "Week program"
+            }
+        },
         "sensor": {
-            "bypass_manual_timeout": {
-                "name": "Manual bypass duration"
-            },
             "bypass_state": {
                 "name": "Bypass state",
                 "state": {
@@ -64,29 +68,11 @@
                     "Opening": "Opening"
                 }
             },
-            "bypass_tmax": {
-                "name": "Bypass Tmax"
-            },
-            "bypass_tmax_summer": {
-                "name": "Bypass Tmax summer"
-            },
-            "bypass_tmin": {
-                "name": "Bypass Tmin"
-            },
-            "bypass_tmin_summer": {
-                "name": "Bypass Tmin summer"
-            },
             "filter_dirtiness": {
                 "name": "Filter dirtiness"
             },
             "filter_remain": {
                 "name": "Filter remain"
-            },
-            "filter_time": {
-                "name": "Filter lifetime"
-            },
-            "get_filter_time": {
-                "name": "Filter time"
             },
             "get_time": {
                 "name": "Time"
@@ -130,11 +116,6 @@
             },
             "work_time": {
                 "name": "Work time"
-            }
-        },
-        "switch": {
-            "summer_mode": {
-                "name": "Summer mode"
             }
         }
     }

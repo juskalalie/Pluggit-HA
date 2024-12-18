@@ -41,29 +41,8 @@
                     "Opened": "Opened"
                 }
             },
-            "bypass_tmin": {
-                "name": "Bypass Tmin"
-            },
-            "bypass_tmax": {
-                "name": "Bypass Tmax"
-            },
-            "bypass_tmin_summer": {
-                "name": "Bypass Tmin summer"
-            },
-            "bypass_tmax_summer": {
-                "name": "Bypass Tmax summer"
-            },
-            "bypass_manual_timeout": {
-                "name": "Manual bypass duration"
-            },
             "get_time": {
                 "name": "Time"
-            },
-            "get_filter_time": {
-                "name": "Filter time"
-            },
-            "filter_time": {
-                "name": "Filter lifetime"
             },
             "unit_mode": {
                 "name": "Mode",
@@ -98,7 +77,9 @@
                     "preset_mode": {
                         "state": {
                             "Week Program": "Week Program",
-                            "Away": "Away"
+                            "Away": "Away",
+                            "Summer": "Summer",
+                            "Fireplace": "Fireplace"
                         }
                     }
                 }
@@ -132,9 +113,9 @@
                 "name": "Set time"
             }
         },
-        "switch": {
-            "summer_mode": {
-                "name": "Summer mode"
+        "select": {
+            "select_week": {
+                "name": "Week program"
             }
         }
     }
