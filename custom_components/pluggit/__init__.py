@@ -13,8 +13,8 @@ PLATFORMS = [
     Platform.BUTTON,
     Platform.FAN,
     Platform.NUMBER,
+    Platform.SELECT,
     Platform.SENSOR,
-    Platform.SWITCH,
 ]
 _LOGGER = logging.getLogger(__name__)
 
