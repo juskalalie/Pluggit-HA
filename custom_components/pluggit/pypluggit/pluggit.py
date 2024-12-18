@@ -1,3 +1,5 @@
+"""Pluggit."""
+
 from pymodbus import ModbusException
 from pymodbus.client import ModbusTcpClient
 from pymodbus.constants import Endian
@@ -14,6 +16,7 @@ from .const import (
     Registers,
     RegisterType,
     SpeedLevelFan,
+    WeekProgram,
 )
 
 
@@ -167,6 +170,15 @@ class Pluggit:
         """Get date and time in seconds."""
         return self.__read_register(register=Registers.PRM_DATE_TIME)
 
+    def get_week_program(self) -> WeekProgram | None:
+        """Get the selected number of week program."""
+        ret = self.__read_register(register=Registers.PRM_NUM_OF_WEEK_PROGRAM)
+
+        if ret is not None:
+            return WeekProgram(value=ret)
+
+        return None
+
     def set_date_time(self, time_seconds: int):
         """Set date and time."""
         self.__write_register(
@@ -212,4 +224,10 @@ class Pluggit:
         """Set bypass manual timeout."""
         self.__write_register(
             register=Registers.PRM_RAM_IDX_BYPASS_MANUAL_TIMEOUT, data=timeout
+        )
+
+    def set_week_program(self, number: WeekProgram):
+        """Set number of week program."""
+        self.__write_register(
+            register=Registers.PRM_NUM_OF_WEEK_PROGRAM, data=number.value
         )

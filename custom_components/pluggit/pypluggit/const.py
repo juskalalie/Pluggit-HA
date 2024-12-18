@@ -1,7 +1,11 @@
+"""Const for pypluggit."""
+
 from enum import Enum, auto
 
 
 class Registers(Enum):
+    """Name registers."""
+
     PRM_SYSTEM_ID = auto()
     PRM_SYSTEM_SERIAL_NUM_LOW = auto()
     PRM_SYSTEM_SERIAL_NUM_HIGH = auto()
@@ -26,14 +30,19 @@ class Registers(Enum):
     PRM_RAM_IDX_BYPASS_MANUAL_TIMEOUT = auto()
     PRM_BYPASS_TMIN_SUMMER = auto()
     PRM_BYPASS_TMAX_SUMMER = auto()
+    PRM_NUM_OF_WEEK_PROGRAM = auto()
 
 
 class RegisterType(Enum):
+    """Register tyoes."""
+
     UINT_32 = auto()
     FLOAT = auto()
 
 
 class Components(Enum):
+    """Possible components for pluggit."""
+
     FP1 = 0x0001
     WEEK = 0x0002
     BYPASS = 0x0004
@@ -53,6 +62,8 @@ class Components(Enum):
 
 
 class ActiveUnitMode(Enum):
+    """Active unit mode."""
+
     DEMAND_MODE = 0x0002
     MANUAL_MODE = 0x0004
     WEEK_PROGRAM_MODE = 0x0008
@@ -65,11 +76,29 @@ class ActiveUnitMode(Enum):
 
 
 class SpeedLevelFan(Enum):
+    """Speed level."""
+
     LEVEL_0 = 0x0000
     LEVEL_1 = 0x0001
     LEVEL_2 = 0x0002
     LEVEL_3 = 0x0003
     LEVEL_4 = 0x0004
+
+
+class WeekProgram(Enum):
+    """Week program."""
+
+    PROGRAM_1 = 0x0000
+    PROGRAM_2 = 0x0001
+    PROGRAM_3 = 0x0002
+    PROGRAM_4 = 0x0003
+    PROGRAM_5 = 0x0004
+    PROGRAM_6 = 0x0005
+    PROGRAM_7 = 0x0006
+    PROGRAM_8 = 0x0007
+    PROGRAM_9 = 0x0008
+    PROGRAM_10 = 0x0009
+    PROGRAM_11 = 0x000A
 
 
 DEVICE_TYPE = {1: "AP190", 2: "AP310", 3: "AP460", 4: "AD160"}
@@ -134,4 +163,5 @@ REGISTER_DIC = {
     Registers.PRM_RAM_IDX_BYPASS_MANUAL_TIMEOUT: [264, RegisterType.UINT_32],
     Registers.PRM_BYPASS_TMIN_SUMMER: [766, RegisterType.FLOAT],
     Registers.PRM_BYPASS_TMAX_SUMMER: [764, RegisterType.FLOAT],
+    Registers.PRM_NUM_OF_WEEK_PROGRAM: [466, RegisterType.UINT_32],
 }
