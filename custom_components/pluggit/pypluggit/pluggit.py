@@ -2,9 +2,7 @@
 
 from pymodbus import ModbusException
 from pymodbus.client import ModbusTcpClient
-from pymodbus.constants import Endian
-from pymodbus.exceptions import ConnectionException, ModbusIOException
-from pymodbus.payload import BinaryPayloadBuilder, BinaryPayloadDecoder
+from pymodbus.exceptions import ConnectionException
 
 from .const import (
     BYPASS_STATE,
@@ -14,7 +12,6 @@ from .const import (
     REGISTER_DIC,
     ActiveUnitMode,
     Registers,
-    RegisterType,
     SpeedLevelFan,
     WeekProgram,
 )
@@ -23,44 +20,31 @@ from .const import (
 class Pluggit:
     """Pluggit."""
 
-    client: ModbusTcpClient
-    host: str
-
     def __init__(self, host: str) -> None:
         """Init host address."""
-        self.host = host
-        self.client = ModbusTcpClient(host=self.host)
+        self._client = ModbusTcpClient(host=host)
 
     def __read_register(self, register: Registers):
         item = REGISTER_DIC[register]
 
         try:
-            result = self.client.read_holding_registers(address=item[0], count=2)
-            decoder = BinaryPayloadDecoder.fromRegisters(
-                result.registers, byteorder=Endian.BIG, wordorder=Endian.LITTLE
+            read = self._client.read_holding_registers(address=item[0], count=2)
+            ret = ModbusTcpClient.convert_from_registers(
+                registers=read.registers, data_type=item[1], word_order="little"
             )
-        except ModbusIOException:
-            return None
         except ModbusException:
             return None
 
-        if item[1] == RegisterType.UINT_32:
-            return decoder.decode_32bit_uint()
-        if item[1] == RegisterType.FLOAT:
-            return decoder.decode_32bit_float()
-        return None
+        return ret
 
     def __write_register(self, register: Registers, data: int):
         item = REGISTER_DIC[register]
-        builder = BinaryPayloadBuilder(byteorder=Endian.BIG, wordorder=Endian.LITTLE)
-
-        if item[1] == RegisterType.UINT_32:
-            builder.add_32bit_uint(data)
-        elif item[1] == RegisterType.FLOAT:
-            builder.add_32bit_float(data)
 
         try:
-            self.client.write_registers(address=item[0], values=builder.to_registers())
+            ret = ModbusTcpClient.convert_to_registers(
+                value=data, data_type=item[1], word_order="little"
+            )
+            self._client.write_registers(address=item[0], values=ret)
         except ConnectionException:
             return
 

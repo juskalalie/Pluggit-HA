@@ -2,6 +2,8 @@
 
 from enum import Enum, auto
 
+from pymodbus.client import ModbusTcpClient as m
+
 
 class Registers(Enum):
     """Name registers."""
@@ -31,13 +33,6 @@ class Registers(Enum):
     PRM_BYPASS_TMIN_SUMMER = auto()
     PRM_BYPASS_TMAX_SUMMER = auto()
     PRM_NUM_OF_WEEK_PROGRAM = auto()
-
-
-class RegisterType(Enum):
-    """Register tyoes."""
-
-    UINT_32 = auto()
-    FLOAT = auto()
 
 
 class Components(Enum):
@@ -139,29 +134,29 @@ BYPASS_STATE = {
 }
 
 REGISTER_DIC = {
-    Registers.PRM_SYSTEM_ID: [2, RegisterType.UINT_32],
-    Registers.PRM_SYSTEM_SERIAL_NUM_LOW: [4, RegisterType.UINT_32],
-    Registers.PRM_SYSTEM_SERIAL_NUM_HIGH: [6, RegisterType.UINT_32],
-    Registers.PRM_FW_VERSION: [24, RegisterType.UINT_32],
-    Registers.PRM_DATE_TIME: [108, RegisterType.UINT_32],
-    Registers.PRM_DATE_TIME_SET: [110, RegisterType.UINT_32],
-    Registers.PRM_WORK_TIME: [624, RegisterType.UINT_32],
-    Registers.PRM_CURRENT_BL_STATE: [472, RegisterType.UINT_32],
-    Registers.PRM_RAM_IDX_UNIT_MODE: [168, RegisterType.UINT_32],
-    Registers.PRM_ROM_IDX_SPEED_LEVEL: [324, RegisterType.UINT_32],
-    Registers.PRM_RAM_IDX_T1: [132, RegisterType.FLOAT],
-    Registers.PRM_RAM_IDX_T2: [134, RegisterType.FLOAT],
-    Registers.PRM_RAM_IDX_T3: [136, RegisterType.FLOAT],
-    Registers.PRM_RAM_IDX_T4: [138, RegisterType.FLOAT],
-    Registers.PRM_FILTER_REMAINING_TIME: [554, RegisterType.UINT_32],
-    Registers.PRM_FILTER_DEFAULT_TIME: [556, RegisterType.UINT_32],
-    Registers.PRM_FILTER_RESET: [558, RegisterType.UINT_32],
-    Registers.PRM_FILTER_DIRTINESS_DEGREE: [612, RegisterType.UINT_32],
-    Registers.PRM_BYPASS_TMIN: [444, RegisterType.FLOAT],
-    Registers.PRM_BYPASS_TMAX: [446, RegisterType.FLOAT],
-    Registers.PRM_RAM_IDX_BYPASS_ACTUAL_STATE: [198, RegisterType.UINT_32],
-    Registers.PRM_RAM_IDX_BYPASS_MANUAL_TIMEOUT: [264, RegisterType.UINT_32],
-    Registers.PRM_BYPASS_TMIN_SUMMER: [766, RegisterType.FLOAT],
-    Registers.PRM_BYPASS_TMAX_SUMMER: [764, RegisterType.FLOAT],
-    Registers.PRM_NUM_OF_WEEK_PROGRAM: [466, RegisterType.UINT_32],
+    Registers.PRM_SYSTEM_ID: [2, m.DATATYPE.UINT32],
+    Registers.PRM_SYSTEM_SERIAL_NUM_LOW: [4, m.DATATYPE.UINT32],
+    Registers.PRM_SYSTEM_SERIAL_NUM_HIGH: [6, m.DATATYPE.UINT32],
+    Registers.PRM_FW_VERSION: [24, m.DATATYPE.UINT32],
+    Registers.PRM_DATE_TIME: [108, m.DATATYPE.UINT32],
+    Registers.PRM_DATE_TIME_SET: [110, m.DATATYPE.UINT32],
+    Registers.PRM_WORK_TIME: [624, m.DATATYPE.UINT32],
+    Registers.PRM_CURRENT_BL_STATE: [472, m.DATATYPE.UINT32],
+    Registers.PRM_RAM_IDX_UNIT_MODE: [168, m.DATATYPE.UINT32],
+    Registers.PRM_ROM_IDX_SPEED_LEVEL: [324, m.DATATYPE.UINT32],
+    Registers.PRM_RAM_IDX_T1: [132, m.DATATYPE.FLOAT32],
+    Registers.PRM_RAM_IDX_T2: [134, m.DATATYPE.FLOAT32],
+    Registers.PRM_RAM_IDX_T3: [136, m.DATATYPE.FLOAT32],
+    Registers.PRM_RAM_IDX_T4: [138, m.DATATYPE.FLOAT32],
+    Registers.PRM_FILTER_REMAINING_TIME: [554, m.DATATYPE.UINT32],
+    Registers.PRM_FILTER_DEFAULT_TIME: [556, m.DATATYPE.UINT32],
+    Registers.PRM_FILTER_RESET: [558, m.DATATYPE.UINT32],
+    Registers.PRM_FILTER_DIRTINESS_DEGREE: [612, m.DATATYPE.UINT32],
+    Registers.PRM_BYPASS_TMIN: [444, m.DATATYPE.FLOAT32],
+    Registers.PRM_BYPASS_TMAX: [446, m.DATATYPE.FLOAT32],
+    Registers.PRM_RAM_IDX_BYPASS_ACTUAL_STATE: [198, m.DATATYPE.UINT32],
+    Registers.PRM_RAM_IDX_BYPASS_MANUAL_TIMEOUT: [264, m.DATATYPE.UINT32],
+    Registers.PRM_BYPASS_TMIN_SUMMER: [766, m.DATATYPE.FLOAT32],
+    Registers.PRM_BYPASS_TMAX_SUMMER: [764, m.DATATYPE.FLOAT32],
+    Registers.PRM_NUM_OF_WEEK_PROGRAM: [466, m.DATATYPE.UINT32],
 }
