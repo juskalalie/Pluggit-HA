@@ -1,7 +1,7 @@
 {
     "domain": "pluggit",
     "name": "Pluggit",
-    "version": "0.1.0",
+    "version": "1.2.1",
     "codeowners": ["@Goemon64"],
     "config_flow": true,
     "dependencies": [],
