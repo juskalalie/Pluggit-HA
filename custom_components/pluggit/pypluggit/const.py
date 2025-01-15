@@ -33,6 +33,8 @@ class Registers(Enum):
     PRM_BYPASS_TMIN_SUMMER = auto()
     PRM_BYPASS_TMAX_SUMMER = auto()
     PRM_NUM_OF_WEEK_PROGRAM = auto()
+    PRM_VOC = auto()
+    PRM_RAM_IDX_RH3_CORRECTED = auto()
 
 
 class Components(Enum):
@@ -159,4 +161,6 @@ REGISTER_DIC = {
     Registers.PRM_BYPASS_TMIN_SUMMER: [766, m.DATATYPE.FLOAT32],
     Registers.PRM_BYPASS_TMAX_SUMMER: [764, m.DATATYPE.FLOAT32],
     Registers.PRM_NUM_OF_WEEK_PROGRAM: [466, m.DATATYPE.UINT32],
+    Registers.PRM_RAM_IDX_RH3_CORRECTED: [196, m.DATATYPE.UINT32],
+    Registers.PRM_VOC: [430, m.DATATYPE.UINT32],
 }
