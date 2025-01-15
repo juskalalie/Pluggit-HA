@@ -68,6 +68,12 @@
             },
             "speed_level": {
                 "name": "Stufe"
+            },
+            "humidity": {
+                "name": "Feuchtigkeit"
+            },
+            "voc": {
+                "name": "VOC"
             }
         },
         "fan": {
