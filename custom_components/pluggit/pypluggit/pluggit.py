@@ -163,6 +163,14 @@ class Pluggit:
 
         return None
 
+    def get_humidity(self) -> int | None:
+        """Get Humidity in %."""
+        return self.__read_register(register=Registers.PRM_RAM_IDX_RH3_CORRECTED)
+
+    def get_voc(self) -> int | None:
+        """Get VOC in ppm."""
+        return self.__read_register(register=Registers.PRM_VOC)
+
     def set_date_time(self, time_seconds: int):
         """Set date and time."""
         self.__write_register(
