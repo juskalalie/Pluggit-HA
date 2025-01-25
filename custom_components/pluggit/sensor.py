@@ -162,6 +162,28 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         entity_registry_enabled_default=False,
         value_fn=lambda device: device.get_voc(),
     ),
+    PluggitSensorEntityDescription(
+        key="get_fan_1",
+        translation_key="fan1",
+        device_class=None,
+        native_unit_of_measurement="rpm",
+        icon="mdi:fan",
+        state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=0,
+        entity_registry_enabled_default=False,
+        value_fn=lambda device: device.get_fan_speed_1(),
+    ),
+    PluggitSensorEntityDescription(
+        key="get_fan_2",
+        translation_key="fan2",
+        device_class=None,
+        native_unit_of_measurement="rpm",
+        icon="mdi:fan",
+        state_class=SensorStateClass.MEASUREMENT,
+        suggested_display_precision=0,
+        entity_registry_enabled_default=False,
+        value_fn=lambda device: device.get_fan_speed_2(),
+    ),
 )
 
 
