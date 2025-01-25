@@ -171,6 +171,36 @@ class Pluggit:
         """Get VOC in ppm."""
         return self.__read_register(register=Registers.PRM_VOC)
 
+    def get_fan_speed_1(self) -> float | None:
+        """Get fan 1 speed."""
+        return self.__read_register(register=Registers.PRM_HAL_TAHO_1)
+
+    def get_fan_speed_2(self) -> float | None:
+        """Get fan 2 speed."""
+        return self.__read_register(register=Registers.PRM_HAL_TAHO_2)
+
+    def get_night_mode_start_hour(self):
+        """Get night mode start hour."""
+        return self.__read_register(
+            register=Registers.PRM_ROM_IDX_NIGHT_MODE_START_HOUR
+        )
+
+    def get_night_mode_start_min(self):
+        """Get night mode start min."""
+        return self.__read_register(register=Registers.PRM_ROM_IDX_NIGHT_MODE_START_MIN)
+
+    def get_night_mode_end_hour(self):
+        """Get night mode end hour."""
+        return self.__read_register(register=Registers.PRM_ROM_IDX_NIGHT_MODE_END_HOUR)
+
+    def get_night_mode_end_min(self):
+        """Get night mode end min."""
+        return self.__read_register(register=Registers.PRM_ROM_IDX_NIGHT_MODE_END_MIN)
+
+    def get_night_mode_state(self) -> int | None:
+        """Get state of night mode on/off."""
+        return self.__read_register(register=Registers.PRM_NIGHT_MODE_STATE)
+
     def set_date_time(self, time_seconds: int):
         """Set date and time."""
         self.__write_register(
@@ -222,4 +252,28 @@ class Pluggit:
         """Set number of week program."""
         self.__write_register(
             register=Registers.PRM_NUM_OF_WEEK_PROGRAM, data=number.value
+        )
+
+    def set_night_mode_start_hour(self, hour: int):
+        """Set night mode start hour."""
+        self.__write_register(
+            register=Registers.PRM_ROM_IDX_NIGHT_MODE_START_HOUR, data=hour
+        )
+
+    def set_night_mode_start_min(self, min: int):
+        """Set night mode start min."""
+        self.__write_register(
+            register=Registers.PRM_ROM_IDX_NIGHT_MODE_START_MIN, data=min
+        )
+
+    def set_night_mode_end_hour(self, hour: int):
+        """Set night mode end hour."""
+        self.__write_register(
+            register=Registers.PRM_ROM_IDX_NIGHT_MODE_END_HOUR, data=hour
+        )
+
+    def set_night_mode_end_min(self, min: int):
+        """Set night mode end min."""
+        self.__write_register(
+            register=Registers.PRM_ROM_IDX_NIGHT_MODE_END_MIN, data=min
         )
