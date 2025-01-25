@@ -68,6 +68,12 @@
                     "Opening": "Opening"
                 }
             },
+            "fan1": {
+                "name": "Fan speed 1"
+            },
+            "fan2": {
+                "name": "Fan speed 2"
+            },
             "filter_dirtiness": {
                 "name": "Filter dirtiness"
             },
@@ -122,6 +128,19 @@
             },
             "work_time": {
                 "name": "Work time"
+            }
+        },
+        "switch": {
+            "night_mode": {
+                "name": "Night mode"
+            }
+        },
+        "time": {
+            "end_time": {
+                "name": "Night mode end"
+            },
+            "start_time": {
+                "name": "Night mode start"
             }
         }
     }

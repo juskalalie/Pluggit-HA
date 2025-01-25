@@ -74,6 +74,12 @@
             },
             "voc": {
                 "name": "VOC"
+            },
+            "fan1": {
+                "name": "Lüftergeschwindigkeit 1"
+            },
+            "fan2": {
+                "name": "Lüftergeschwindigkeit 2"
             }
         },
         "fan": {
@@ -120,13 +126,21 @@
             }
         },
         "switch": {
-            "summer_mode": {
-                "name": "Sommermodus"
+            "night_mode": {
+                "name": "Nachtmodus"
             }
         },
         "select": {
             "select_week": {
                 "name": "Wochenprogramm"
+            }
+        },
+        "time": {
+            "start_time": {
+                "name": "Nachtmodus Start"
+            },
+            "end_time": {
+                "name": "Nachtmodus Ende"
             }
         }
     }
