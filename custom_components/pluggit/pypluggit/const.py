@@ -18,6 +18,8 @@ class Registers(Enum):
     PRM_CURRENT_BL_STATE = auto()
     PRM_RAM_IDX_UNIT_MODE = auto()
     PRM_ROM_IDX_SPEED_LEVEL = auto()
+    PRM_HAL_TAHO_1 = auto()
+    PRM_HAL_TAHO_2 = auto()
     PRM_RAM_IDX_T1 = auto()
     PRM_RAM_IDX_T2 = auto()
     PRM_RAM_IDX_T3 = auto()
@@ -33,6 +35,11 @@ class Registers(Enum):
     PRM_BYPASS_TMIN_SUMMER = auto()
     PRM_BYPASS_TMAX_SUMMER = auto()
     PRM_NUM_OF_WEEK_PROGRAM = auto()
+    PRM_NIGHT_MODE_STATE = auto()
+    PRM_ROM_IDX_NIGHT_MODE_START_HOUR = auto()
+    PRM_ROM_IDX_NIGHT_MODE_START_MIN = auto()
+    PRM_ROM_IDX_NIGHT_MODE_END_HOUR = auto()
+    PRM_ROM_IDX_NIGHT_MODE_END_MIN = auto()
     PRM_VOC = auto()
     PRM_RAM_IDX_RH3_CORRECTED = auto()
 
@@ -67,9 +74,11 @@ class ActiveUnitMode(Enum):
     AWAY_MODE = 0x0010
     FIREPLACE_MODE = 0x0040
     SUMMER_MODE = 0x0800
+    NIGHT_MODE = 0x0020
     END_AWAY_MODE = 0x8010
     END_FIREPLACE_MODE = 0x8040
     END_SUMMER_MODE = 0x8800
+    END_NIGHT_MODE = 0x8020
 
 
 class SpeedLevelFan(Enum):
@@ -163,4 +172,11 @@ REGISTER_DIC = {
     Registers.PRM_NUM_OF_WEEK_PROGRAM: [466, m.DATATYPE.UINT32],
     Registers.PRM_RAM_IDX_RH3_CORRECTED: [196, m.DATATYPE.UINT32],
     Registers.PRM_VOC: [430, m.DATATYPE.UINT32],
+    Registers.PRM_HAL_TAHO_1: [100, m.DATATYPE.FLOAT32],
+    Registers.PRM_HAL_TAHO_2: [102, m.DATATYPE.FLOAT32],
+    Registers.PRM_ROM_IDX_NIGHT_MODE_START_HOUR: [332, m.DATATYPE.UINT32],
+    Registers.PRM_ROM_IDX_NIGHT_MODE_START_MIN: [334, m.DATATYPE.UINT32],
+    Registers.PRM_ROM_IDX_NIGHT_MODE_END_HOUR: [336, m.DATATYPE.UINT32],
+    Registers.PRM_ROM_IDX_NIGHT_MODE_END_MIN: [338, m.DATATYPE.UINT32],
+    Registers.PRM_NIGHT_MODE_STATE: [560, m.DATATYPE.UINT32],
 }
