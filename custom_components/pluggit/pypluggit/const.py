@@ -79,6 +79,8 @@ class ActiveUnitMode(Enum):
     END_FIREPLACE_MODE = 0x8040
     END_SUMMER_MODE = 0x8800
     END_NIGHT_MODE = 0x8020
+    SELECT_MANUAL_BYPASS = 0x0080
+    DESELECT_MANUAL_BYPASS = 0x8080
 
 
 class SpeedLevelFan(Enum):
