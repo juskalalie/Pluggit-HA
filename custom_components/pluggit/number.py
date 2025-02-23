@@ -15,7 +15,7 @@ from homeassistant.const import EntityCategory, UnitOfTemperature, UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import StateType
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .const import DOMAIN, SERIAL_NUMBER
 from .pypluggit.pluggit import Pluggit
@@ -40,6 +40,7 @@ NUMBERS: tuple[PluggitNumberEntityDescription, ...] = (
         native_max_value=15,
         native_min_value=12,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        entity_registry_enabled_default=False,
         get_fn=lambda device: device.get_bypass_tmin(),
         set_fn=lambda device, temp: device.set_bypass_tmin(temp),
     ),
@@ -51,6 +52,7 @@ NUMBERS: tuple[PluggitNumberEntityDescription, ...] = (
         native_max_value=27,
         native_min_value=21,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        entity_registry_enabled_default=False,
         get_fn=lambda device: device.get_bypass_tmax(),
         set_fn=lambda device, temp: device.set_bypass_tmax(temp),
     ),
@@ -62,6 +64,7 @@ NUMBERS: tuple[PluggitNumberEntityDescription, ...] = (
         native_max_value=17,
         native_min_value=12,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        entity_registry_enabled_default=False,
         get_fn=lambda device: device.get_bypass_tmin_summer(),
         set_fn=lambda device, temp: device.set_bypass_tmin_summer(temp),
     ),
@@ -73,6 +76,7 @@ NUMBERS: tuple[PluggitNumberEntityDescription, ...] = (
         native_max_value=30,
         native_min_value=21,
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
+        entity_registry_enabled_default=False,
         get_fn=lambda device: device.get_bypass_tmax_summer(),
         set_fn=lambda device, temp: device.set_bypass_tmax_summer(temp),
     ),
@@ -95,6 +99,7 @@ NUMBERS: tuple[PluggitNumberEntityDescription, ...] = (
         native_max_value=480,
         native_min_value=60,
         native_unit_of_measurement=UnitOfTime.MINUTES,
+        entity_registry_enabled_default=False,
         get_fn=lambda device: device.get_bypass_manual_timeout(),
         set_fn=lambda device, temp: device.set_bypass_manual_timeout(int(temp)),
     ),
@@ -104,7 +109,7 @@ NUMBERS: tuple[PluggitNumberEntityDescription, ...] = (
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
-    async_add_entities: AddEntitiesCallback,
+    async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up numbers from a config entry."""
     data = hass.data[DOMAIN][entry.entry_id]

@@ -7,7 +7,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .const import DOMAIN, SERIAL_NUMBER
 from .pypluggit.pluggit import Pluggit, WeekProgram
@@ -18,7 +18,7 @@ _LOGGER = logging.getLogger(__name__)
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
-    async_add_entities: AddEntitiesCallback,
+    async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up select."""
     data = hass.data[DOMAIN][entry.entry_id]
@@ -86,6 +86,3 @@ class PluggitSelect(SelectEntity):
         else:
             self._attr_current_option = None
             self._attr_available = False
-        _LOGGER.info(self._attr_unique_id)
-        _LOGGER.info(self._attr_current_option)
-        _LOGGER.info(type(self._attr_current_option))
