@@ -16,13 +16,14 @@ from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity import StateType
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .const import DOMAIN, SERIAL_NUMBER
 from .pypluggit.const import ActiveUnitMode
 from .pypluggit.pluggit import Pluggit
 
 _LOGGER = logging.getLogger(__name__)
+# pylint: disable=unnecessary-lambda
 
 
 @dataclass(kw_only=True)
@@ -32,6 +33,8 @@ class PluggitSwitchEntityDescription(SwitchEntityDescription):
     on_fn: Callable[[Pluggit], None]
     off_fn: Callable[[Pluggit], None]
     get_fn: Callable[[Pluggit], StateType]
+    is_on: Callable[[StateType], bool]
+    set_icon: Callable[[StateType], str]
 
 
 SWITCHES: tuple[PluggitSwitchEntityDescription, ...] = (
@@ -44,14 +47,31 @@ SWITCHES: tuple[PluggitSwitchEntityDescription, ...] = (
         on_fn=lambda device: device.set_unit_mode(ActiveUnitMode.NIGHT_MODE),
         off_fn=lambda device: device.set_unit_mode(ActiveUnitMode.END_NIGHT_MODE),
         get_fn=lambda device: device.get_night_mode_state(),
+        is_on=lambda value: help_night_mode(value),
+        set_icon=None,
     ),
 )
+
+
+def help_night_mode(value: int) -> bool | None:
+    """Is night mode on."""
+
+    ret: bool
+
+    if value == 0:
+        ret = False
+    elif value == 1:
+        ret = True
+    else:
+        ret = None
+
+    return ret
 
 
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
-    async_add_entities: AddEntitiesCallback,
+    async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up switch from a config entry."""
     data = hass.data[DOMAIN][entry.entry_id]
@@ -92,6 +112,14 @@ class PluggitSwitch(SwitchEntity):
             name="Pluggit", identifiers={(DOMAIN, self._serial_number)}
         )
 
+    @property
+    def icon(self) -> str | None:
+        """Return icon."""
+        if self.entity_description.set_icon is not None:
+            return self.entity_description.set_icon(self._attr_native_value)
+
+        return self.entity_description.icon
+
     def turn_on(self, **kwargs: Any) -> None:
         """Turn the entity on."""
         self.entity_description.on_fn(self._pluggit)
@@ -102,8 +130,7 @@ class PluggitSwitch(SwitchEntity):
 
     def update(self) -> None:
         """Fetch data for switch."""
-        # If a preset mode is set, there is an update. But this update is to fast,
-        # the mode on the device isn't ready. So we wait here 100ms.
+        # If the switch is pressed, there is an update for the status, but this update is to fast. So we wait here.
         time.sleep(100 / 1000)
 
         self._attr_native_value = self.entity_description.get_fn(self._pluggit)
@@ -113,9 +140,4 @@ class PluggitSwitch(SwitchEntity):
             self._attr_is_on = None
         else:
             self._attr_available = True
-            if self._attr_native_value == 0:
-                self._attr_is_on = False
-            elif self._attr_native_value == 1:
-                self._attr_is_on = True
-            else:
-                self._attr_is_on = None
+            self._attr_is_on = self.entity_description.is_on(self._attr_native_value)
