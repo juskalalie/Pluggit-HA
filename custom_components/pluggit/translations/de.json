@@ -142,6 +142,17 @@
             "end_time": {
                 "name": "Nachtmodus Ende"
             }
+        },
+        "valve": {
+            "manual_bypass": {
+                "name": "Manueller Bypass",
+                "state": {
+                    "open": "Geöffnet",
+                    "closing": "Schließen...",
+                    "closed": "Geschlossen",
+                    "opening": "Öffnen..."
+                }
+            }
         }
     }
 }

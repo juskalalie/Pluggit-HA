@@ -142,6 +142,11 @@
             "end_time": {
                 "name": "Night mode end"
             }
+        },
+        "valve": {
+            "manual_bypass": {
+                "name": "Manual bypass"
+            }
         }
     }
 }

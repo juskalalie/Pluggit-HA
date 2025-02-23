@@ -142,6 +142,11 @@
             "start_time": {
                 "name": "Night mode start"
             }
+        },
+        "valve": {
+            "manual_bypass": {
+                "name": "Manual bypass"
+            }
         }
     }
 }
