@@ -21,7 +21,7 @@ from homeassistant.const import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.typing import StateType
 from homeassistant.util.dt import DEFAULT_TIME_ZONE, now
 
@@ -35,6 +35,7 @@ from .pypluggit.pluggit import (
 )
 
 _LOGGER = logging.getLogger(__name__)
+# pylint: disable=unnecessary-lambda
 # SCAN_INTERVAL = timedelta(seconds=20)
 
 
@@ -43,6 +44,7 @@ class PluggitSensorEntityDescription(SensorEntityDescription):
     """Describes Pluggit sensor entity."""
 
     value_fn: Callable[[Pluggit], StateType]
+    icon_fn: Callable[[StateType], str]
 
 
 SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
@@ -54,6 +56,7 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=1,
         value_fn=lambda device: device.get_temperature_t1(),
+        icon_fn=None,
     ),
     PluggitSensorEntityDescription(
         key="T2",
@@ -63,6 +66,7 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=1,
         value_fn=lambda device: device.get_temperature_t2(),
+        icon_fn=None,
     ),
     PluggitSensorEntityDescription(
         key="T3",
@@ -72,6 +76,7 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=1,
         value_fn=lambda device: device.get_temperature_t3(),
+        icon_fn=None,
     ),
     PluggitSensorEntityDescription(
         key="T4",
@@ -81,6 +86,7 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         suggested_display_precision=1,
         value_fn=lambda device: device.get_temperature_t4(),
+        icon_fn=None,
     ),
     PluggitSensorEntityDescription(
         key="work_time",
@@ -91,6 +97,7 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         icon="mdi:progress-clock",
         value_fn=lambda device: device.get_work_time(),
+        icon_fn=None,
     ),
     PluggitSensorEntityDescription(
         key="filter_remain",
@@ -100,6 +107,7 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         state_class=SensorStateClass.MEASUREMENT,
         icon="mdi:air-filter",
         value_fn=lambda device: device.get_remaining_filter_time(),
+        icon_fn=None,
     ),
     PluggitSensorEntityDescription(
         key="filter_dirtiness",
@@ -108,13 +116,16 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         options=list(DEGREE_OF_DIRTINESS.values()),
         icon="mdi:liquid-spot",
         value_fn=lambda device: device.get_filter_dirtiness(),
+        icon_fn=None,
     ),
     PluggitSensorEntityDescription(
         key="bypass_state",
         translation_key="bypass_state",
         device_class=SensorDeviceClass.ENUM,
         options=list(BYPASS_STATE.values()),
+        entity_registry_enabled_default=False,
         value_fn=lambda device: device.get_bypass_actual_state(),
+        icon_fn=lambda value: set_bypass_icon(value),
     ),
     PluggitSensorEntityDescription(
         key="get_time",
@@ -124,6 +135,7 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         state_class=None,
         entity_registry_enabled_default=False,
         value_fn=lambda device: help_time(device.get_date_time()),
+        icon_fn=None,
     ),
     PluggitSensorEntityDescription(
         key="get_unit_mode",
@@ -132,6 +144,7 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         options=list(CURRENT_UNIT_MODE.values()),
         icon="mdi:information-outline",
         value_fn=lambda device: device.get_current_unit_mode(),
+        icon_fn=None,
     ),
     PluggitSensorEntityDescription(
         key="get_spped_level",
@@ -141,6 +154,7 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         entity_registry_enabled_default=False,
         icon="mdi:fan",
         value_fn=lambda device: device.get_speed_level(),
+        icon_fn=None,
     ),
     PluggitSensorEntityDescription(
         key="get_humidity",
@@ -151,6 +165,7 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         suggested_display_precision=0,
         entity_registry_enabled_default=False,
         value_fn=lambda device: device.get_humidity(),
+        icon_fn=None,
     ),
     PluggitSensorEntityDescription(
         key="get_voc",
@@ -161,6 +176,7 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         suggested_display_precision=0,
         entity_registry_enabled_default=False,
         value_fn=lambda device: device.get_voc(),
+        icon_fn=None,
     ),
     PluggitSensorEntityDescription(
         key="get_fan_1",
@@ -172,6 +188,7 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         suggested_display_precision=0,
         entity_registry_enabled_default=False,
         value_fn=lambda device: device.get_fan_speed_1(),
+        icon_fn=None,
     ),
     PluggitSensorEntityDescription(
         key="get_fan_2",
@@ -183,8 +200,23 @@ SENSORS: tuple[PluggitSensorEntityDescription, ...] = (
         suggested_display_precision=0,
         entity_registry_enabled_default=False,
         value_fn=lambda device: device.get_fan_speed_2(),
+        icon_fn=None,
     ),
 )
+
+
+def set_bypass_icon(value: str) -> str | None:
+    """Set icon for manual bypass."""
+
+    if value == "Closed":
+        return "mdi:valve-closed"
+    if value in ("In Process", "Closing", "Opening"):
+        return "mdi:valve"
+    if value == "Opened":
+        return "mdi:valve-open"
+
+    # if the connection is lost, this icon is set as a standard
+    return "mdi:valve-closed"
 
 
 def help_time(local_time: int) -> datetime | None:
@@ -200,7 +232,7 @@ def help_time(local_time: int) -> datetime | None:
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: ConfigEntry,
-    async_add_entities: AddEntitiesCallback,
+    async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up sensors from a config entry."""
     data = hass.data[DOMAIN][entry.entry_id]
@@ -237,6 +269,14 @@ class PluggitSensor(SensorEntity):
         self._attr_device_info = DeviceInfo(
             name="Pluggit", identifiers={(DOMAIN, self._serial_number)}
         )
+
+    @property
+    def icon(self) -> str | None:
+        """Return icon."""
+        if self.entity_description.icon_fn is not None:
+            return self.entity_description.icon_fn(self._attr_native_value)
+
+        return self.entity_description.icon
 
     def update(self) -> None:
         """Fetch data for sensors."""
