@@ -55,6 +55,7 @@ class PluggitFan(FanEntity):
         SpeedLevelFan.LEVEL_4,
     ]
     SUPPORTED_PRESET_MODES = [
+        CURRENT_UNIT_MODE[2],
         CURRENT_UNIT_MODE[3],
         CURRENT_UNIT_MODE[5],
         CURRENT_UNIT_MODE[6],
@@ -130,7 +131,9 @@ class PluggitFan(FanEntity):
         """Set preset mode."""
 
         mode = None
-        if preset_mode == CURRENT_UNIT_MODE[3]:
+        if preset_mode == CURRENT_UNIT_MODE[2]:
+            mode = ActiveUnitMode.DEMAND_MODE
+        elif preset_mode == CURRENT_UNIT_MODE[3]:
             mode = ActiveUnitMode.WEEK_PROGRAM_MODE
         elif preset_mode == CURRENT_UNIT_MODE[5]:
             mode = ActiveUnitMode.AWAY_MODE
