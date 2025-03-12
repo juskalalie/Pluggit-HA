@@ -24,6 +24,7 @@
                     "preset_mode": {
                         "state": {
                             "Away": "Away",
+                            "Demand": "Demand",
                             "Fireplace": "Fireplace",
                             "Summer": "Summer",
                             "Week Program": "Week Program"

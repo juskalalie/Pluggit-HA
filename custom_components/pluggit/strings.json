@@ -88,6 +88,7 @@
                 "state_attributes": {
                     "preset_mode": {
                         "state": {
+                            "Demand": "Demand",
                             "Week Program": "Week Program",
                             "Away": "Away",
                             "Summer": "Summer",
