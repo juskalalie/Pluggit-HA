@@ -277,3 +277,9 @@ class Pluggit:
         self.__write_register(
             register=Registers.PRM_ROM_IDX_NIGHT_MODE_END_MIN, data=min
         )
+
+    def set_bypass_position(self, pos: int):
+        """open (255) / close (0) bypass."""
+        self.__write_register(register=Registers.PRM_BYPASS_POSITION, data=pos)
+
+    
