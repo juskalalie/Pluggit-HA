@@ -124,6 +124,12 @@
             },
             "date_time": {
                 "name": "Set time"
+            },
+            "bypass_open": {
+                "name": "Open bypass"
+            },
+            "bypass_close": {
+                "name": "Close bypass"
             }
         },
         "select": {
