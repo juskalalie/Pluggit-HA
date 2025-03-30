@@ -36,6 +36,16 @@ BUTTONS: tuple[PluggitButtonEntityDescription, ...] = (
         translation_key="date_time",
         set_fn=lambda device: device.set_date_time(help_time()),
     ),
+    PluggitButtonEntityDescription(
+        key="bypass_open",
+        translation_key="bypass_open",
+        set_fn=lambda device: device.set_bypass_position(255),
+    ),
+    PluggitButtonEntityDescription(
+        key="bypass_close",
+        translation_key="bypass_close",
+        set_fn=lambda device: device.set_bypass_position(0),
+    ),
 )
 
 
