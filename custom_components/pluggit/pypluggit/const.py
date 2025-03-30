@@ -24,6 +24,7 @@ class Registers(Enum):
     PRM_RAM_IDX_T2 = auto()
     PRM_RAM_IDX_T3 = auto()
     PRM_RAM_IDX_T4 = auto()
+    PRM_BYPASS_POSITION = auto()
     PRM_FILTER_REMAINING_TIME = auto()
     PRM_FILTER_DEFAULT_TIME = auto()
     PRM_FILTER_RESET = auto()
@@ -161,6 +162,7 @@ REGISTER_DIC = {
     Registers.PRM_RAM_IDX_T2: [134, m.DATATYPE.FLOAT32],
     Registers.PRM_RAM_IDX_T3: [136, m.DATATYPE.FLOAT32],
     Registers.PRM_RAM_IDX_T4: [138, m.DATATYPE.FLOAT32],
+    Registers.PRM_BYPASS_POSITION: [212, m.DATATYPE.UINT32],
     Registers.PRM_FILTER_REMAINING_TIME: [554, m.DATATYPE.UINT32],
     Registers.PRM_FILTER_DEFAULT_TIME: [556, m.DATATYPE.UINT32],
     Registers.PRM_FILTER_RESET: [558, m.DATATYPE.UINT32],
