@@ -1,10 +1,10 @@
 {
     "domain": "pluggit",
     "name": "Pluggit",
-    "version": "1.7.0",
-    "codeowners": ["@Goemon64"],
+    "version": "v0.1.0-aplha",
+    "codeowners": ["@juskalalie"],
     "config_flow": true,
-    "documentation": "https://github.com/Goemon64/Pluggit-HA",
+    "documentation": "https://github.com/juskalalie/Pluggit-HA",
     "integration_type": "device",
     "iot_class": "local_polling",
     "requirements": ["pymodbus==3.8.3"]
