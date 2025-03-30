@@ -15,6 +15,12 @@
             },
             "filter_reset": {
                 "name": "Filter reset"
+            },
+            "bypass_open": {
+                "name": "Open bypass"
+            },
+            "bypass_close": {
+                "name": "Close bypass"
             }
         },
         "fan": {
