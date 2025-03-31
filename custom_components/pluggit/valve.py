@@ -105,13 +105,13 @@ class PluggitValve(ValveEntity):
 
         return None
 
-    def open_valve(self) -> None:
-        """Open the valve."""
-        self._pluggit.set_unit_mode(ActiveUnitMode.SELECT_MANUAL_BYPASS)
+#    def open_valve(self) -> None:
+#        """Open the valve."""
+#        self._pluggit.set_unit_mode(ActiveUnitMode.SELECT_MANUAL_BYPASS)
 
-    def close_valve(self) -> None:
-        """Close valve."""
-        self._pluggit.set_unit_mode(ActiveUnitMode.DESELECT_MANUAL_BYPASS)
+#    def close_valve(self) -> None:
+#        """Close valve."""
+#        self._pluggit.set_unit_mode(ActiveUnitMode.DESELECT_MANUAL_BYPASS)
 
     def update(self) -> None:
         """Fetch data for valve."""
